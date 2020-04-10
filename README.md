@@ -36,3 +36,7 @@ Hello, Fluent!
 For how to build messages, see the [Fluent docs](https://github.com/projectfluent/fluent/wiki).
 
 ### **_Note:_** No npm package is published yet so feel free to clone this repo or the clone `src/index.js` until then.
+
+⚠️ WARNING ⚠️ This project is still in development and APIs are subject to change.
+
+See the [Docs](./docs) for more details.
