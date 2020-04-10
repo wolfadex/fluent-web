@@ -1,6 +1,6 @@
 # fluent-web
 
-A web component that uses [Project Fluent](https://projectfluent.org/) for localization. Examples are located [here](./src).
+A web component that uses [Project Fluent](https://projectfluent.org/) for localization. [Interactive example](https://wolfadex.github.io/fluent-web/) and the source code for the example is [here](./src).
 
 | Locale en-US                                            | Locale pl                                         |
 | ------------------------------------------------------- | ------------------------------------------------- |
