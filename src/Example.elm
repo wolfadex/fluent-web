@@ -1,6 +1,7 @@
 module Example exposing (main)
 
-import Browser
+import BeautifulExample
+import Color
 import Html exposing (Html)
 import Html.Attributes
 import Html.Events
@@ -12,7 +13,15 @@ import Time exposing (Posix, Zone)
 
 main : Program Flags Model Msg
 main =
-    Browser.element
+    BeautifulExample.element
+        { title = "Fluent-Web"
+        , details =
+            Just """A demonstration of using fluent-web custom web components for 2 locales, en-US and pl. These components are for doing l10n using https://projectfluent.org/"""
+        , color = Just Color.blue
+        , maxWidth = 400
+        , githubUrl = Just "https://github.com/wolfadex/fluent-web"
+        , documentationUrl = Nothing
+        }
         { init = init
         , view = view
         , update = update

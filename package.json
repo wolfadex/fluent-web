@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel src/example.html"
+    "dev": "parcel src/example.html",
+    "build": "parcel build src/example.html -d ."
   },
   "devDependencies": {
     "@fluent/dedent": "^0.2.0",
