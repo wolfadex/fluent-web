@@ -16,7 +16,7 @@ main =
     BeautifulExample.element
         { title = "Fluent-Web"
         , details =
-            Just """A demonstration of using fluent-web custom web components for 2 locales, en-US and pl. These components are for doing l10n using https://projectfluent.org/"""
+            Just """A demonstration of using fluent-web custom web components for 3 locales, en-US, pl and cs. These components are for doing l10n using https://projectfluent.org/"""
         , color = Just Color.blue
         , maxWidth = 400
         , githubUrl = Just "https://github.com/wolfadex/fluent-web"
@@ -55,6 +55,7 @@ type alias Localization =
 type Locale
     = EnUS
     | Pl
+    | Cs
 
 
 decodeLocale : Decoder Locale
@@ -80,6 +81,9 @@ localeToString locale =
         Pl ->
             "pl"
 
+        Cs ->
+            "cs"
+
 
 localeFromString : String -> Result String Locale
 localeFromString localeStr =
@@ -89,6 +93,9 @@ localeFromString localeStr =
 
         "pl" ->
             Ok Pl
+
+        "cs" ->
+            Ok Cs
 
         _ ->
             Err ("unsupported localce: " ++ localeStr)
@@ -178,6 +185,9 @@ view model =
                 , Html.option
                     [ Html.Attributes.value (localeToString Pl) ]
                     [ Html.text "pl" ]
+                , Html.option
+                    [ Html.Attributes.value (localeToString Cs) ]
+                    [ Html.text "cs" ]
                 ]
             ]
         , Html.br [] []
