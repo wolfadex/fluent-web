@@ -34,10 +34,27 @@ const pl = flt`
   clicked-cancel = OK, nieważne.
   `;
 
+const cs = flt`
+  hello = Ahoj, { $userName }!
+  hello-no-name = Vítej cizinče!
+  type-name =
+      .placeholder = Tvé jméno
+
+  # $date (Date) - Current date, formatted as month and day.
+  today-date = Dnes je { DATETIME($date) }.
+  # $date (Date) - Current date, formatted as weekday.
+  today-weekday = Je {$date}.
+
+  sign-in-or-cancel = <b>Přihlásit</b> nebo <em>zrušit</em>.
+  clicked-sign-in = Nyní jsi přihlášen.
+  clicked-cancel = Ok, nevadí.
+  `;
+
 Elm.Example.init({
   node: document.getElementById("root"),
   flags: [
     ["en-US", enUS],
     ["pl", pl],
+    ["cs", cs],
   ],
 });
