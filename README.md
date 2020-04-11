@@ -39,4 +39,4 @@ For how to build messages, see the [Fluent docs](https://github.com/projectfluen
 
 ⚠️ WARNING ⚠️ This project is still in development and APIs are subject to change.
 
-See the [Docs](./docs) for more details.
+See the [Docs](./docs/index.md) for more details.

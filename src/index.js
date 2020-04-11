@@ -2,6 +2,8 @@ import { FluentBundle, FluentResource } from "@fluent/bundle";
 import { mapBundleSync } from "@fluent/sequence";
 import { CachedSyncIterable } from "cached-iterable";
 
+const internalAttributes = ["messagetag", "messageid"];
+
 function parsedBundles(fetchedMessages) {
   const bundles = [];
 
@@ -46,7 +48,7 @@ customElements.define(
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-      if (name === "messageId") {
+      if (name === "messageId" && oldValue !== newValue) {
         this.render();
       }
     }
@@ -69,8 +71,8 @@ customElements.define(
               this.firstElementChild.setAttribute(key, val);
             });
 
-            if (message.value) {
-              this.firstElementChild.innerHTML = message.value;
+            if (message.value && message.value !== "{???}") {
+              slightlySafeInner(this.firstElementChild, message.value);
             }
           } else {
             const el = document.createElement(this.getAttribute("messageTag"));
@@ -79,12 +81,23 @@ customElements.define(
               el.setAttribute(key, val);
             });
 
-            if (message.value) {
-              el.innerHTML = message.value;
+            if (message.value && message.value !== "{???}") {
+              slightlySafeInner(el, message.value);
             }
 
             this.appendChild(el);
           }
+
+          this.getAttributeNames().forEach((name) => {
+            if (!internalAttributes.includes(name)) {
+              this.firstElementChild.setAttribute(
+                name,
+                this.getAttribute(name)
+              );
+            }
+          });
+
+          console.log("carl");
         }
       } else {
         if (this.hasAttribute("messageId")) {
@@ -94,13 +107,22 @@ customElements.define(
           });
 
           if (message.value) {
-            this.innerHTML = message.value;
+            slightlySafeInner(this, message.value);
           }
         }
       }
     }
   }
 );
+
+function slightlySafeInner(el, str) {
+  const template = document.createElement("template");
+  template.innerHTML = str;
+  el.innerHTML = "";
+  Array.from(template.content.childNodes).forEach(function (node) {
+    el.appendChild(node);
+  });
+}
 
 class FluentWeb {
   setBundles(bundles) {

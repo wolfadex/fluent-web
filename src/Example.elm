@@ -35,6 +35,7 @@ type alias Model =
     , personName : String
     , time : Posix
     , zone : Zone
+    , placeholderInput : String
     }
 
 
@@ -43,6 +44,8 @@ type Msg
     | SetPersonName String
     | SetZone Zone
     | SetTime Posix
+    | SetPlaceholderInput String
+    | ClearPlaceholder
 
 
 type alias Localization =
@@ -113,6 +116,7 @@ init messages =
       , personName = "Carl"
       , time = Time.millisToPosix 0
       , zone = Time.utc
+      , placeholderInput = ""
       }
     , Cmd.batch
         [ Task.perform SetTime Time.now
@@ -145,6 +149,12 @@ update msg model =
 
         SetTime time ->
             ( { model | time = time }, Cmd.none )
+
+        SetPlaceholderInput val ->
+            ( { model | placeholderInput = val }, Cmd.none )
+
+        ClearPlaceholder ->
+            ( { model | placeholderInput = "" }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -256,10 +266,10 @@ view model =
                         Json.Encode.null
             , Html.Attributes.attribute "messageId" "type-name"
             , Html.Attributes.attribute "messageTag" "input"
-
-            -- , Html.Attributes.property "args" <|
-            --     Json.Encode.object
-            --         [ ( "userName", Json.Encode.string model.personName ) ]
+            , Html.Events.onInput SetPlaceholderInput
+            , Html.Attributes.attribute "carl" "steve"
+            , Html.Attributes.value model.placeholderInput
+            , Html.Events.onClick ClearPlaceholder
             ]
             []
         ]
