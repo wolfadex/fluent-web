@@ -5,7 +5,7 @@ Under the hood, fluent-web uses the libraries provided by the Fluent team for do
 How these values get to your app is up to you. The Fluent team provides a handy function for writing the localizations inline in your JavaScript code, excellent for testing during development
 
 ```js
-import flt from "@fleunt/dedent";
+import flt from "@fluent/dedent";
 
 const localization = flt`
   hello = Hello, Fluent!

@@ -11,7 +11,7 @@ Example usage:
 JavaScript is just one way to make messages
 
 ```js
-import flt from "@fleunt/dedent";
+import flt from "@fluent/dedent";
 
 const messages = [
   "en-US",
