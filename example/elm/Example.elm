@@ -70,7 +70,6 @@ type Msg
     | SetZone Zone
     | SetTime Posix
     | SetPlaceholderInput String
-    | ClearPlaceholder
     | SetFavoriteFruit String
 
 
@@ -243,9 +242,6 @@ update msg model =
         SetPlaceholderInput val ->
             ( { model | placeholderInput = val }, Cmd.none )
 
-        ClearPlaceholder ->
-            ( { model | placeholderInput = "" }, Cmd.none )
-
         SetFavoriteFruit fruitStr ->
             case fruitFromString fruitStr of
                 Ok fruit ->
@@ -286,7 +282,7 @@ view model =
         , Html.br [] []
         , Html.text "Basic key-value:"
         , Html.br [] []
-        , Html.node "fluent-web"
+        , Html.node "fluent-text"
             [ messages
             , Html.Attributes.attribute "messageId" "hello-no-name"
             ]
@@ -295,7 +291,7 @@ view model =
         , Html.br [] []
         , Html.text "Styled key-value:"
         , Html.br [] []
-        , Html.node "fluent-web"
+        , Html.node "fluent-text"
             [ messages
             , Html.Attributes.attribute "messageId" "sign-in-or-cancel"
             ]
@@ -304,7 +300,7 @@ view model =
         , Html.br [] []
         , Html.text "Today’s Date:"
         , Html.br [] []
-        , Html.node "fluent-web"
+        , Html.node "fluent-text"
             [ messages
             , Html.Attributes.attribute "messageId" "today-date"
             , Html.Attributes.property "args" <|
@@ -322,7 +318,7 @@ view model =
             ]
             []
         , Html.br [] []
-        , Html.node "fluent-web"
+        , Html.node "fluent-text"
             [ messages
             , Html.Attributes.attribute "messageId" "hello"
             , Html.Attributes.property "args" <|
@@ -334,16 +330,13 @@ view model =
         , Html.br [] []
         , Html.text "Input localized:"
         , Html.br [] []
-        , Html.node "fluent-web"
+        , Html.node "fluent-element"
             [ messages
             , Html.Attributes.attribute "messageId" "type-name"
             ]
             [ Html.input
                 [ Html.Events.onInput SetPlaceholderInput
-                , Html.Attributes.attribute "carl" "steve"
                 , Html.Attributes.value model.placeholderInput
-                , Html.Events.onClick ClearPlaceholder
-                , Html.Attributes.property "jennifer" (Json.Encode.list Json.Encode.int [ 1, 2, 3 ])
                 ]
                 []
             ]
@@ -353,7 +346,7 @@ view model =
         , Html.br [] []
         , Html.label
             []
-            [ Html.node "fluent-web"
+            [ Html.node "fluent-text"
                 [ messages
                 , Html.Attributes.attribute "messageId" "favorite-fruit"
                 ]
@@ -368,7 +361,7 @@ view model =
                     Html.option
                         [ Html.Attributes.value (fruitToString fruit)
                         ]
-                        [ Html.node "fluent-web"
+                        [ Html.node "fluent-text"
                             [ messages
                             , Html.Attributes.attribute "messageId" ("fruit-" ++ fruitToString fruit)
                             ]

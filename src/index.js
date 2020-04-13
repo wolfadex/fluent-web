@@ -19,7 +19,67 @@ function parsedBundles(fetchedMessages) {
 }
 
 customElements.define(
-  "fluent-web",
+  "fluent-text",
+  class extends HTMLElement {
+    constructor() {
+      super();
+
+      if (window.fluentWeb == null) {
+        window.fluentWeb = new FluentWeb();
+      }
+    }
+
+    connectedCallback() {
+      this.render();
+    }
+
+    set messages(newValue) {
+      this.buildBundles(newValue);
+      this.render();
+    }
+
+    set args(newValue) {
+      this.messageArgs = newValue;
+      this.render();
+    }
+
+    static get observedAttributes() {
+      return ["messageId"];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (name === "messageId" && oldValue !== newValue) {
+        this.render();
+      }
+    }
+
+    buildBundles(messages) {
+      let bundles = parsedBundles(messages);
+      window.fluentWeb.setBundles(bundles);
+    }
+
+    render() {
+      const message = window.fluentWeb.getMessage({
+        messageId: this.getAttribute("messageId"),
+        args: this.messageArgs,
+      });
+
+      if (message) {
+        if (message.value && message.value !== "{???}") {
+          const template = document.createElement("template");
+          template.innerHTML = message.value;
+          this.innerHTML = "";
+          Array.from(template.content.childNodes).forEach((node) => {
+            this.appendChild(node);
+          });
+        }
+      }
+    }
+  }
+);
+
+customElements.define(
+  "fluent-element",
   class extends HTMLElement {
     constructor() {
       super();
@@ -86,13 +146,6 @@ customElements.define(
                 this.getAttribute(name)
               );
             }
-          });
-        } else if (message.value && message.value !== "{???}") {
-          const template = document.createElement("template");
-          template.innerHTML = message.value;
-          this.innerHTML = "";
-          Array.from(template.content.childNodes).forEach((node) => {
-            this.appendChild(node);
           });
         }
       }

@@ -1,12 +1,12 @@
 # fluent-web
 
-A web component that uses [Project Fluent](https://projectfluent.org/) for localization. [Interactive example](https://wolfadex.github.io/fluent-web/) and the source code for the example is [here](./src).
+A web component that uses [Project Fluent](https://projectfluent.org/) for localization. Interactive [example here](https://wolfadex.github.io/fluent-web/) and the source code for the example is [here](./example/elm).
 
 | Locale en-US                                            | Locale pl                                         |
 | ------------------------------------------------------- | ------------------------------------------------- |
 | ![example result locale en-US](./screen_shot_en-us.png) | ![example result locale pl](./screen_shot_pl.png) |
 
-Example usage:
+## Basic Usage:
 
 JavaScript is just one way to make messages
 
@@ -24,7 +24,7 @@ const messages = [
 HTML:
 
 ```html
-<fluent-web messages="messages" messageId="hello"></fluent-web>
+<fluent-text messages="messages" messageId="hello"></fluent-text>
 ```
 
 Result:
@@ -34,6 +34,8 @@ Hello, Fluent!
 ```
 
 For how to build messages, see the [Fluent docs](https://github.com/projectfluent/fluent/wiki).
+
+## Other:
 
 ### **_Note:_** No npm package is published yet so feel free to clone this repo or the clone `src/index.js` until then.
 

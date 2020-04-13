@@ -34,7 +34,7 @@ Now that we have the localization pairs, we can send the one we want to use to o
 
 ```html
 <!-- index.html -->
-<fluent-web messageId="hello" id="helloEl"></fluent-web>
+<fluent-text messageId="hello" id="helloEl"></fluent-text>
 ```
 
 ```js
@@ -57,7 +57,7 @@ Once you have a localization file with arguments setup, their easy to use.
 
 ```html
 <!-- index.html -->
-<fluent-web messageId="hello-name" id="helloPersonEl"></fluent-web>
+<fluent-text messageId="hello-name" id="helloPersonEl"></fluent-text>
 ```
 
 ```js
@@ -92,9 +92,9 @@ Since this is more than just text, it's also an element, you'll need to specify 
 
 ```html
 <!-- index.html -->
-<fluent-web messageId="name" id="nameInput">
+<fluent-element messageId="name" id="nameInput">
   <input type="text" />
-</fluent-web>
+</fluent-element>
 ```
 
 ```js
@@ -117,11 +117,11 @@ Any attributes or properties that aren't part of the fluent-web API are given di
 
 # Framework Support
 
-The great thing about fluent-web` a web component is that we can use it in any front end framework or language that supports web components. The [demo](https://wolfadex.github.io/fluent-web/) is actually written in [Elm](https://elm-lang.org/), though anything from [Svelte](https://svelte.dev/) to [Vue](https://vuejs.org/) or [Ember](https://emberjs.com/) would work just the same.
+The great thing about fluent-web being a web component is that we can use it in any front end framework or language that supports web components. The [demo](https://wolfadex.github.io/fluent-web/) is written in [Elm](https://elm-lang.org/), though anything from [Svelte](https://svelte.dev/) to [Vue](https://vuejs.org/) or [Ember](https://emberjs.com/) would work just the same.
 
 I hope that this project can help to reduce the amount of time spent re-implementing localization across every front end tool.
 
 # Known Issues
 
 - Users of React should look at using [@fluent/react](https://github.com/projectfluent/fluent.js/tree/master/fluent-react) as React has some compatability issues with web components. In this case the issue is that React isn't able to set properties on web components. Another option would be to wrap the fluent-web in a specialized React component. I do not have experience in this so I won't be making any recommendations.
-- Chromium (Chrome, Brave, Edge, etc.) and Safari browsers don't update the current value of a `select` element when the translation changes. They do update as soon as you manually cause a change. FireFox updates as expected
+- Chromium (Chrome, Brave, Edge, etc.) and Safari browsers don't update the current value of a `select` element when the translation changes. They do update as soon as you interact with the `select`, such as changing its focus. FireFox updates as expected.
