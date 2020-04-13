@@ -62,8 +62,8 @@ const thTH = flt`
   # $date (Date) - Current date, formatted as weekday.
   today-weekday = มันคือ {$date}
 
-  sign-in-or-cancel = <b>เข้าสู่ระบบ</b> หรือ <em>ยกเลิก</em>.
-  clicked-sign-in = เรียบร้อย.
+  sign-in-or-cancel = <b>เข้าสู่ระบบ</b> หรือ <em>ยกเลิก</em>
+  clicked-sign-in = เรียบร้อย
   clicked-cancel = ไม่เป็นไร
   `;
 
