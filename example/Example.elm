@@ -37,8 +37,8 @@ main =
                     [ "A demonstration of using fluent-web custom web components for"
                     , String.fromInt (List.length allLocales)
                     , "locales,"
-                    , oxfordCommaify localeToString allLocales
-                    , ". These components are for doing l10n using https://projectfluent.org/"
+                    , oxfordCommaify localeToString allLocales ++ "."
+                    , "These components are for doing l10n using https://projectfluent.org/."
                     ]
                 )
         , color = Just Color.blue
