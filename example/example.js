@@ -67,7 +67,6 @@ const thTH = flt`
   clicked-cancel = ไม่เป็นไร
   `;
 
-
 Elm.Example.init({
   node: document.getElementById("root"),
   flags: [
