@@ -2,7 +2,7 @@ import { FluentBundle, FluentResource } from "@fluent/bundle";
 import { mapBundleSync } from "@fluent/sequence";
 import { CachedSyncIterable } from "cached-iterable";
 
-const internalAttributes = ["messagetag", "messageid"];
+const internalAttributes = ["messageid"];
 
 function parsedBundles(fetchedMessages) {
   const bundles = [];
@@ -44,7 +44,7 @@ customElements.define(
     }
 
     static get observedAttributes() {
-      return ["messageTag", "messageId"];
+      return ["messageId"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -59,33 +59,24 @@ customElements.define(
     }
 
     render() {
-      if (this.hasAttribute("messageTag")) {
-        const message = window.fluentWeb.getMessage({
-          messageId: this.getAttribute("messageId"),
-          args: this.messageArgs,
-        });
+      const message = window.fluentWeb.getMessage({
+        messageId: this.getAttribute("messageId"),
+        args: this.messageArgs,
+      });
 
-        if (message) {
-          if (this.firstElementChild) {
-            Object.entries(message.attributes).forEach(([key, val]) => {
-              this.firstElementChild.setAttribute(key, val);
+      if (message) {
+        if (this.firstElementChild) {
+          Object.entries(message.attributes).forEach(([key, val]) => {
+            this.firstElementChild.setAttribute(key, val);
+          });
+
+          if (message.value && message.value !== "{???}") {
+            const template = document.createElement("template");
+            template.innerHTML = message.value;
+            this.firstElementChild.innerHTML = "";
+            Array.from(template.content.childNodes).forEach((node) => {
+              this.firstElementChild.appendChild(node);
             });
-
-            if (message.value && message.value !== "{???}") {
-              slightlySafeInner(this.firstElementChild, message.value);
-            }
-          } else {
-            const el = document.createElement(this.getAttribute("messageTag"));
-
-            Object.entries(message.attributes).forEach(([key, val]) => {
-              el.setAttribute(key, val);
-            });
-
-            if (message.value && message.value !== "{???}") {
-              slightlySafeInner(el, message.value);
-            }
-
-            this.appendChild(el);
           }
 
           this.getAttributeNames().forEach((name) => {
@@ -96,33 +87,18 @@ customElements.define(
               );
             }
           });
-
-          console.log("carl");
-        }
-      } else {
-        if (this.hasAttribute("messageId")) {
-          const message = window.fluentWeb.getMessage({
-            messageId: this.getAttribute("messageId"),
-            args: this.messageArgs,
+        } else if (message.value && message.value !== "{???}") {
+          const template = document.createElement("template");
+          template.innerHTML = message.value;
+          this.innerHTML = "";
+          Array.from(template.content.childNodes).forEach((node) => {
+            this.appendChild(node);
           });
-
-          if (message.value) {
-            slightlySafeInner(this, message.value);
-          }
         }
       }
     }
   }
 );
-
-function slightlySafeInner(el, str) {
-  const template = document.createElement("template");
-  template.innerHTML = str;
-  el.innerHTML = "";
-  Array.from(template.content.childNodes).forEach(function (node) {
-    el.appendChild(node);
-  });
-}
 
 class FluentWeb {
   setBundles(bundles) {

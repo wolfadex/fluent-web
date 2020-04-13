@@ -15,6 +15,11 @@ const enUS = flt`
   sign-in-or-cancel = <b>Sign in</b> or <em>cancel</em>.
   clicked-sign-in = You are now signed in.
   clicked-cancel = OK, nevermind.
+
+  favorite-fruit = Favorite Fruit
+  fruit-apple = Apple
+  fruit-orange = Orange
+  fruit-lemon = Lemon
   `;
 
 const pl = flt`
@@ -33,6 +38,11 @@ const pl = flt`
   sign-in-or-cancel = <b>Zaloguj</b> albo <em>anuluj</em>.
   clicked-sign-in = Brawo!
   clicked-cancel = OK, nieważne.
+
+  favorite-fruit = Ulubiony owoc
+  fruit-apple = Jabłko
+  fruit-orange = Pomarańczowy
+  fruit-lemon = Cytrynowy
   `;
 
 const cs = flt`
@@ -49,6 +59,11 @@ const cs = flt`
   sign-in-or-cancel = <b>Přihlásit</b> nebo <em>zrušit</em>.
   clicked-sign-in = Nyní jsi přihlášen.
   clicked-cancel = Ok, nevadí.
+
+  favorite-fruit = Oblíbené ovoce
+  fruit-apple = Jablko
+  fruit-orange = Oranžový
+  fruit-lemon = Citrón
   `;
 
 const thTH = flt`
@@ -65,6 +80,11 @@ const thTH = flt`
   sign-in-or-cancel = <b>เข้าสู่ระบบ</b> หรือ <em>ยกเลิก</em>
   clicked-sign-in = เรียบร้อย
   clicked-cancel = ไม่เป็นไร
+
+  favorite-fruit = ผลไม้ที่ชอบ
+  fruit-apple = แอปเปิ้ล
+  fruit-orange = ส้ม
+  fruit-lemon = มะนาว
   `;
 
 Elm.Example.init({

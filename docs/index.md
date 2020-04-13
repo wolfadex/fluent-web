@@ -120,4 +120,7 @@ The great thing about fluent-web` a web component is that we can use it in any f
 
 I hope that this project can help to reduce the amount of time spent re-implementing localization across every front end tool.
 
-**_Note:_** Users of React should look at using [@fluent/react](https://github.com/projectfluent/fluent.js/tree/master/fluent-react) as React has some compatability issues with web components. In this case the issue is that React isn't able to set properties on web components. Another option would be to wrap the fluent-web in a specialized React component. I do not have experience in this so I won't be making any recommendations.
+# Known Issues
+
+- Users of React should look at using [@fluent/react](https://github.com/projectfluent/fluent.js/tree/master/fluent-react) as React has some compatability issues with web components. In this case the issue is that React isn't able to set properties on web components. Another option would be to wrap the fluent-web in a specialized React component. I do not have experience in this so I won't be making any recommendations.
+- Chromium (Chrome, Brave, Edge, etc.) and Safari browsers don't update the current value of a `select` element when the translation changes. They do update as soon as you manually cause a change. FireFox updates as expected

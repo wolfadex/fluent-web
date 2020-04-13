@@ -60,6 +60,7 @@ type alias Model =
     , time : Posix
     , zone : Zone
     , placeholderInput : String
+    , favoriteFruit : Fruit
     }
 
 
@@ -70,10 +71,51 @@ type Msg
     | SetTime Posix
     | SetPlaceholderInput String
     | ClearPlaceholder
+    | SetFavoriteFruit String
 
 
 type alias Localization =
     String
+
+
+type Fruit
+    = Apple
+    | Orange
+    | Lemon
+
+
+fruitToString : Fruit -> String
+fruitToString fruit =
+    case fruit of
+        Apple ->
+            "apple"
+
+        Orange ->
+            "orange"
+
+        Lemon ->
+            "lemon"
+
+
+fruitFromString : String -> Result String Fruit
+fruitFromString maybeFruit =
+    case maybeFruit of
+        "apple" ->
+            Ok Apple
+
+        "orange" ->
+            Ok Orange
+
+        "lemon" ->
+            Ok Lemon
+
+        _ ->
+            Err ("Unknown fruit: " ++ maybeFruit)
+
+
+allFruit : List Fruit
+allFruit =
+    [ Apple, Orange, Lemon ]
 
 
 type Locale
@@ -164,6 +206,7 @@ init messages =
       , time = Time.millisToPosix 0
       , zone = Time.utc
       , placeholderInput = ""
+      , favoriteFruit = Apple
       }
     , Cmd.batch
         [ Task.perform SetTime Time.now
@@ -203,6 +246,14 @@ update msg model =
         ClearPlaceholder ->
             ( { model | placeholderInput = "" }, Cmd.none )
 
+        SetFavoriteFruit fruitStr ->
+            case fruitFromString fruitStr of
+                Ok fruit ->
+                    ( { model | favoriteFruit = fruit }, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -211,12 +262,9 @@ view model =
             model.messages
                 |> List.filter (\( locale, _ ) -> model.activeLocale == locale)
                 |> List.head
-
-        localeOption : Locale -> Html Msg
-        localeOption locale =
-            Html.option
-                [ Html.Attributes.value (localeToString locale) ]
-                [ Html.text (localeToString locale) ]
+                |> Maybe.map (\m -> Json.Encode.list encodeMessages [ m ])
+                |> Maybe.withDefault Json.Encode.null
+                |> Html.Attributes.property "messages"
     in
     Html.div
         []
@@ -225,20 +273,21 @@ view model =
             [ Html.text "Active Locale"
             , Html.select
                 [ Html.Events.onInput ChangeLocale ]
-                (List.map localeOption allLocales)
+                (List.map
+                    (\locale ->
+                        Html.option
+                            [ Html.Attributes.value (localeToString locale) ]
+                            [ Html.text (localeToString locale) ]
+                    )
+                    allLocales
+                )
             ]
         , Html.br [] []
         , Html.br [] []
         , Html.text "Basic key-value:"
         , Html.br [] []
         , Html.node "fluent-web"
-            [ Html.Attributes.property "messages" <|
-                case messages of
-                    Just m ->
-                        Json.Encode.list encodeMessages [ m ]
-
-                    Nothing ->
-                        Json.Encode.null
+            [ messages
             , Html.Attributes.attribute "messageId" "hello-no-name"
             ]
             []
@@ -247,13 +296,7 @@ view model =
         , Html.text "Styled key-value:"
         , Html.br [] []
         , Html.node "fluent-web"
-            [ Html.Attributes.property "messages" <|
-                case messages of
-                    Just m ->
-                        Json.Encode.list encodeMessages [ m ]
-
-                    Nothing ->
-                        Json.Encode.null
+            [ messages
             , Html.Attributes.attribute "messageId" "sign-in-or-cancel"
             ]
             []
@@ -262,13 +305,7 @@ view model =
         , Html.text "Today’s Date:"
         , Html.br [] []
         , Html.node "fluent-web"
-            [ Html.Attributes.property "messages" <|
-                case messages of
-                    Just m ->
-                        Json.Encode.list encodeMessages [ m ]
-
-                    Nothing ->
-                        Json.Encode.null
+            [ messages
             , Html.Attributes.attribute "messageId" "today-date"
             , Html.Attributes.property "args" <|
                 Json.Encode.object
@@ -286,13 +323,7 @@ view model =
             []
         , Html.br [] []
         , Html.node "fluent-web"
-            [ Html.Attributes.property "messages" <|
-                case messages of
-                    Just m ->
-                        Json.Encode.list encodeMessages [ m ]
-
-                    Nothing ->
-                        Json.Encode.null
+            [ messages
             , Html.Attributes.attribute "messageId" "hello"
             , Html.Attributes.property "args" <|
                 Json.Encode.object
@@ -304,21 +335,48 @@ view model =
         , Html.text "Input localized:"
         , Html.br [] []
         , Html.node "fluent-web"
-            [ Html.Attributes.property "messages" <|
-                case messages of
-                    Just m ->
-                        Json.Encode.list encodeMessages [ m ]
-
-                    Nothing ->
-                        Json.Encode.null
+            [ messages
             , Html.Attributes.attribute "messageId" "type-name"
-            , Html.Attributes.attribute "messageTag" "input"
-            , Html.Events.onInput SetPlaceholderInput
-            , Html.Attributes.attribute "carl" "steve"
-            , Html.Attributes.value model.placeholderInput
-            , Html.Events.onClick ClearPlaceholder
             ]
+            [ Html.input
+                [ Html.Events.onInput SetPlaceholderInput
+                , Html.Attributes.attribute "carl" "steve"
+                , Html.Attributes.value model.placeholderInput
+                , Html.Events.onClick ClearPlaceholder
+                , Html.Attributes.property "jennifer" (Json.Encode.list Json.Encode.int [ 1, 2, 3 ])
+                ]
+                []
+            ]
+        , Html.br [] []
+        , Html.br [] []
+        , Html.text "Select with localized options:"
+        , Html.br [] []
+        , Html.label
             []
+            [ Html.node "fluent-web"
+                [ messages
+                , Html.Attributes.attribute "messageId" "favorite-fruit"
+                ]
+                []
+            ]
+        , Html.select
+            [ Html.Events.onInput SetFavoriteFruit
+            , Html.Attributes.value (fruitToString model.favoriteFruit)
+            ]
+            (List.map
+                (\fruit ->
+                    Html.option
+                        [ Html.Attributes.value (fruitToString fruit)
+                        ]
+                        [ Html.node "fluent-web"
+                            [ messages
+                            , Html.Attributes.attribute "messageId" ("fruit-" ++ fruitToString fruit)
+                            ]
+                            []
+                        ]
+                )
+                allFruit
+            )
         ]
 
 
