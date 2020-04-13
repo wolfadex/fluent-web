@@ -13,10 +13,34 @@ import Time exposing (Posix, Zone)
 
 main : Program Flags Model Msg
 main =
+    let
+        oxfordCommaify : (a -> String) -> List a -> String
+        oxfordCommaify stringifier list =
+            case List.reverse (List.map stringifier list) of
+                [] ->
+                    ""
+
+                x :: [] ->
+                    x
+
+                y :: x :: [] ->
+                    x ++ " and " ++ y
+
+                z :: zs ->
+                    String.join ", " (List.reverse (("and " ++ z) :: zs))
+    in
     BeautifulExample.element
         { title = "Fluent-Web"
         , details =
-            Just """A demonstration of using fluent-web custom web components for 3 locales, en-US, pl and cs. These components are for doing l10n using https://projectfluent.org/"""
+            Just
+                (String.join " "
+                    [ "A demonstration of using fluent-web custom web components for"
+                    , String.fromInt (List.length allLocales)
+                    , "locales,"
+                    , oxfordCommaify localeToString allLocales
+                    , ". These components are for doing l10n using https://projectfluent.org/"
+                    ]
+                )
         , color = Just Color.blue
         , maxWidth = 400
         , githubUrl = Just "https://github.com/wolfadex/fluent-web"
@@ -56,6 +80,16 @@ type Locale
     = EnUS
     | Pl
     | Cs
+    | ThTH
+
+
+allLocales : List Locale
+allLocales =
+    [ EnUS
+    , Pl
+    , Cs
+    , ThTH
+    ]
 
 
 decodeLocale : Decoder Locale
@@ -84,6 +118,9 @@ localeToString locale =
         Cs ->
             "cs"
 
+        ThTH ->
+            "th-TH"
+
 
 localeFromString : String -> Result String Locale
 localeFromString localeStr =
@@ -97,8 +134,11 @@ localeFromString localeStr =
         "cs" ->
             Ok Cs
 
+        "th-TH" ->
+            Ok ThTH
+
         _ ->
-            Err ("unsupported localce: " ++ localeStr)
+            Err ("unsupported locale: " ++ localeStr)
 
 
 type alias Flags =
@@ -171,6 +211,12 @@ view model =
             model.messages
                 |> List.filter (\( locale, _ ) -> model.activeLocale == locale)
                 |> List.head
+
+        localeOption : Locale -> Html Msg
+        localeOption locale =
+            Html.option
+                [ Html.Attributes.value (localeToString locale) ]
+                [ Html.text (localeToString locale) ]
     in
     Html.div
         []
@@ -179,16 +225,7 @@ view model =
             [ Html.text "Active Locale"
             , Html.select
                 [ Html.Events.onInput ChangeLocale ]
-                [ Html.option
-                    [ Html.Attributes.value (localeToString EnUS) ]
-                    [ Html.text "en-US" ]
-                , Html.option
-                    [ Html.Attributes.value (localeToString Pl) ]
-                    [ Html.text "pl" ]
-                , Html.option
-                    [ Html.Attributes.value (localeToString Cs) ]
-                    [ Html.text "cs" ]
-                ]
+                (List.map localeOption allLocales)
             ]
         , Html.br [] []
         , Html.br [] []
