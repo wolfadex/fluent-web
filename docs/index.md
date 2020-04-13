@@ -88,11 +88,13 @@ Another feature of Fluent localization is support for localized properties. For 
 <input type="text" placeholder="Your Name" />
 ```
 
-Since this is more than just text, it's also an element, you'll need to specify the tag for the element which you want to use. This looks like
+Since this is more than just text, it's also an element, you'll need to specify the child element which you want the attributes applied to. This looks like
 
 ```html
 <!-- index.html -->
-<fluent-web messageId="name" id="nameInput"></fluent-web>
+<fluent-web messageId="name" id="nameInput">
+  <input type="text" />
+</fluent-web>
 ```
 
 ```js
@@ -106,7 +108,6 @@ const enUSLocalization = flt`
 const enUS = ["en-US", enUSLocalization];
 const nameInput = document.getElementById("nameInput");
 
-nameInput.setProperty("messageTag", "input");
 nameInput.setProperty("messages", enUS);
 ```
 
