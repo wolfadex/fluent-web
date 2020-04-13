@@ -62,7 +62,7 @@ const cs = flt`
 
   favorite-fruit = Oblíbené ovoce
   fruit-apple = Jablko
-  fruit-orange = Oranžový
+  fruit-orange = Pomeranč
   fruit-lemon = Citrón
   `;
 
