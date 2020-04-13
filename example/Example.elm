@@ -259,7 +259,7 @@ view model =
             []
         , Html.br [] []
         , Html.br [] []
-        , Html.text "Today's Date:"
+        , Html.text "Today’s Date:"
         , Html.br [] []
         , Html.node "fluent-web"
             [ Html.Attributes.property "messages" <|
