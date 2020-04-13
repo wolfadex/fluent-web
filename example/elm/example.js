@@ -87,6 +87,27 @@ const thTH = flt`
   fruit-lemon = มะนาว
   `;
 
+const eo = flt`
+  hello = Saluton, { $userName }!
+  hello-no-name = Saluton, fremdulo!
+  type-name =
+      .placeholder = Via nomo
+
+  # $date (Date) - Current date, formatted as month and day.
+  today-date = Hodiaŭ estas { DATETIME($date) }.
+  # $date (Date) - Current date, formatted as weekday.
+  today-weekday = Estas {$date}.
+
+  sign-in-or-cancel = <b>Ensaluti</b> aŭ <em>nuligi</em>.
+  clicked-sign-in = Vi estas nun ensalutina.
+  clicked-cancel = Bone, ne gravas.
+
+  favorite-fruit = Preferata Frukto
+  fruit-apple = Pomo
+  fruit-orange = Oranĝo
+  fruit-lemon = Citrono
+  `;
+
 Elm.Example.init({
   node: document.getElementById("root"),
   flags: [
@@ -94,5 +115,6 @@ Elm.Example.init({
     ["pl", pl],
     ["cs", cs],
     ["th-TH", thTH],
+    ["eo", eo],
   ],
 });
