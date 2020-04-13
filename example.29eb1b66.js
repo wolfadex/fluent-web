@@ -60,7 +60,7 @@ parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcel
 
   favorite-fruit = Oblíbené ovoce
   fruit-apple = Jablko
-  fruit-orange = Oranžový
+  fruit-orange = Pomeranč
   fruit-lemon = Citrón
   `,r=e.default`
   hello = สวัสดีค่ะ คุณ{ $userName }
@@ -83,4 +83,4 @@ parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcel
   fruit-lemon = มะนาว
   `;a.Elm.Example.init({node:document.getElementById("root"),flags:[["en-US",n],["pl",o],["cs",d],["th-TH",r]]});
 },{"@fluent/dedent":"u2lF","./Example.elm":"Y9sf"}]},{},["Zdfz"], null)
-//# sourceMappingURL=/example.03c21645.js.map
+//# sourceMappingURL=/example.29eb1b66.js.map
