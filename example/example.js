@@ -10,12 +10,13 @@ const enUS = flt`
   # $date (Date) - Current date, formatted as month and day.
   today-date = Today is { DATETIME($date) }.
   # $date (Date) - Current date, formatted as weekday.
-  today-weekday = It's {$date}.
+  today-weekday = It’s {$date}.
 
   sign-in-or-cancel = <b>Sign in</b> or <em>cancel</em>.
   clicked-sign-in = You are now signed in.
   clicked-cancel = OK, nevermind.
   `;
+
 const pl = flt`
   hello = Cześć { $userName }!
   hello-no-name = Witaj nieznajomy!
@@ -50,11 +51,28 @@ const cs = flt`
   clicked-cancel = Ok, nevadí.
   `;
 
+const thTH = flt`
+  hello = สวัสดีค่ะ คุณ{ $userName }
+  hello-no-name = สวัสดีค่ะ
+  type-name =
+      .placeholder = ชื่อของคุณ
+
+  # $date (Date) - Current date, formatted as month and day.
+  today-date = วันนี้เป็น { DATETIME($date) }
+  # $date (Date) - Current date, formatted as weekday.
+  today-weekday = มันคือ {$date}
+
+  sign-in-or-cancel = <b>เข้าสู่ระบบ</b> หรือ <em>ยกเลิก</em>
+  clicked-sign-in = เรียบร้อย
+  clicked-cancel = ไม่เป็นไร
+  `;
+
 Elm.Example.init({
   node: document.getElementById("root"),
   flags: [
     ["en-US", enUS],
     ["pl", pl],
     ["cs", cs],
+    ["th-TH", thTH],
   ],
 });
