@@ -2,6 +2,7 @@
 
 .cache
 dist
+commonjs
 elm-stuff
 node_modules
 example/svelte/public/build/

@@ -1,12 +1,14 @@
 {
   "name": "fluent-web",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./commonjs/index.js",
+  "module": "./src/index.js",
   "license": "MIT",
   "scripts": {
     "dev-demo": "parcel example/elm/index.html",
     "build-demo": "parcel build example/elm/index.html -d .",
-    "dev-svelte": "rollup -c -w",
+    "build": "rollup -c",
+    "dev-svelte": "rollup -c rollup.svelte.js -w",
     "start-svelte": "sirv example/svelte/public",
     "dev-vanilla": "parcel example/vanillajs/index.html"
   },
