@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../../src/index.js"></script>
+  </head>
+  <body>
+    <main>
+      <label>
+        Active Locale
+        <select id="locale-selector"></select>
+      </label>
+      <br />
+      <br />
+      Basic key-value:
+      <br />
+      <fluent-text id="helloNoName" messageId="hello-no-name"></fluent-text>
+      <br />
+      <br />
+      Styled key-value:
+      <br />
+      <fluent-text
+        id="signInOrCancel"
+        messageId="sign-in-or-cancel"
+      ></fluent-text>
+      <br />
+      <br />
+      Today’s Date:
+      <br />
+      <fluent-text id="todayDate" messageId="today-date"></fluent-text>
+      <br />
+      <br />
+      Message with argument:
+      <br />
+      <input type="text" id="personNameInput" />
+      <br />
+      <fluent-text id="helloName" messageId="hello"></fluent-text>
+      <br />
+      <br />
+      Input localized:
+      <br />
+      <fluent-element id="typeName" messageId="type-name">
+        <input type="text" />
+      </fluent-element>
+      <br />
+      <br />
+      Select with localized options:
+      <br />
+      <label>
+        <fluent-text
+          id="favoriteFruitLabel"
+          messageId="favorite-fruit"
+        ></fluent-text>
+        <select id="favoriteFruitSelect"></select>
+      </label>
+    </main>
+
+    <script src="index.js"></script>
+  </body>
+</html>

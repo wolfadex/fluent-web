@@ -74,7 +74,6 @@
   <br />
   Styled key-value:
   <br />
-  <!--  -->
   <fluent-text messageId="sign-in-or-cancel" {messages} />
   <br />
   <br />

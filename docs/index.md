@@ -115,6 +115,39 @@ Results in a text input with placeholder text of `Your Name`.
 
 Any attributes or properties that aren't part of the fluent-web API are given directly to element you specify.
 
+# Errors
+
+If there are any errors encountered while localizing, a event named `fluent-web-error` is dispatched. If the error arises while running Fluent's `bundle.formatPattern()`, the `event.detail` will look like
+
+```js
+{
+  messageId, // The message id passed in
+  args, // Any args passed in, or null
+  message, // The message object returned by Fluent
+  errors, // A list of errors populated by Fluent
+}
+```
+
+If the error is due to the message not being found, you'll get
+
+```js
+{
+  messageId, // The message id passed in
+  args, // Any args passed in, or null
+  errors: [new Error("Message object not found")],
+}
+```
+
+Finally, if the error is due to the bundle not being found you'll get
+
+```js
+{
+  messageId, // The message id passed in
+  args, // Any args passed in, or null
+  errors: [new Error(`Bundle with messageId: ${messageId} not found`)],
+}
+```
+
 # Framework Support
 
 The great thing about fluent-web being a web component is that we can use it in any front end framework or language that supports web components. The [demo](https://wolfadex.github.io/fluent-web/) is written in [Elm](https://elm-lang.org/), though anything from [Svelte](https://svelte.dev/) to [Vue](https://vuejs.org/) or [Ember](https://emberjs.com/) would work just the same.
