@@ -122,6 +122,7 @@ type Locale
     | Pl
     | Cs
     | ThTH
+    | Eo
 
 
 allLocales : List Locale
@@ -130,6 +131,7 @@ allLocales =
     , Pl
     , Cs
     , ThTH
+    , Eo
     ]
 
 
@@ -162,6 +164,9 @@ localeToString locale =
         ThTH ->
             "th-TH"
 
+        Eo ->
+            "eo"
+
 
 localeFromString : String -> Result String Locale
 localeFromString localeStr =
@@ -177,6 +182,9 @@ localeFromString localeStr =
 
         "th-TH" ->
             Ok ThTH
+
+        "eo" ->
+            Ok Eo
 
         _ ->
             Err ("unsupported locale: " ++ localeStr)
