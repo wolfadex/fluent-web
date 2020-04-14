@@ -1,6 +1,6 @@
 {
   "name": "fluent-web",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.0",
   "main": "./commonjs/index.js",
   "module": "./src/index.js",
   "license": "MIT",
