@@ -1,6 +1,6 @@
 # Basics
 
-Under the hood, fluent-web uses the libraries provided by the Fluent team for doing the actual localization. All you need to do is provide the component with an array of `( locales, resource )` tuples.
+Under the hood, fluent-web uses the libraries provided by the Fluent team for doing the actual localization. All you need to do is provide the component with a tuple of `( locales, resource )`.
 
 The locales should be either a sinlge locale, such as `"en-US"`, or an array of locales, such as `["th-TH", "cs"]` where `"cs"` is the fallback to `"th-TH"`.
 
@@ -32,7 +32,7 @@ const enUS = ["en-US", enUSResource];
 const pl = ["pl", plResource];
 ```
 
-Now that we have the resource pairs, we can send the one we want to use to our web component as a property
+Now that we have the resource tuple, we can send the one we want to use to our web component as a property
 
 ```html
 <!-- index.html -->
