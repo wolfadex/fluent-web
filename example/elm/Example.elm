@@ -54,7 +54,7 @@ main =
 
 
 type alias Model =
-    { messages : List ( Locale, Localization )
+    { messages : List ( Locale, Resource )
     , activeLocale : Locale
     , personName : String
     , time : Posix
@@ -73,8 +73,8 @@ type Msg
     | SetFavoriteFruit String
 
 
-type alias Localization =
-    String
+type alias Resource =
+    Value
 
 
 type Fruit
@@ -191,7 +191,7 @@ localeFromString localeStr =
 
 
 type alias Flags =
-    List ( String, Localization )
+    List ( String, Resource )
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -266,9 +266,9 @@ view model =
             model.messages
                 |> List.filter (\( locale, _ ) -> model.activeLocale == locale)
                 |> List.head
-                |> Maybe.map (\m -> Json.Encode.list encodeMessages [ m ])
-                |> Maybe.withDefault Json.Encode.null
-                |> Html.Attributes.property "messages"
+                |> Maybe.map encodeResources
+                |> Maybe.withDefault (Json.Encode.list identity [])
+                |> Html.Attributes.property "resource"
     in
     Html.div
         []
@@ -381,7 +381,7 @@ view model =
         ]
 
 
-encodeMessages : ( Locale, Localization ) -> Value
-encodeMessages ( locale, messages ) =
+encodeResources : ( Locale, Resource ) -> Value
+encodeResources ( locale, resource ) =
     Json.Encode.list identity
-        [ Json.Encode.string (localeToString locale), Json.Encode.string messages ]
+        [ Json.Encode.string (localeToString locale), resource ]

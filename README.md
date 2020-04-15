@@ -1,6 +1,6 @@
 # fluent-web
 
-A web component that uses [Project Fluent](https://projectfluent.org/) for localization.
+A web component that uses [Fluent](https://projectfluent.org/) for localization.
 
 [Interactive example](https://wolfadex.github.io/fluent-web/).
 
@@ -10,23 +10,26 @@ A web component that uses [Project Fluent](https://projectfluent.org/) for local
 
 ## Basic Usage:
 
-JavaScript is just one way to make messages
 
 ```js
-import flt from "@fluent/dedent";
+import { FluentResource } from "@fluent/bundle";
 
-const messages = [
+const resource = new FluentResource(`
+hello = Hello, Fluent!
+`);
+const resource = [
   "en-US",
-  flt`
-  hello = Hello, Fluent!
-  `,
+  resource,
 ];
+const textEl = document.getElementById("my-text-element");
+
+textEl.resource = resource;
 ```
 
 HTML:
 
 ```html
-<fluent-text messages="messages" messageId="hello"></fluent-text>
+<fluent-text id="my-text-element" messageId="hello"></fluent-text>
 ```
 
 Result:

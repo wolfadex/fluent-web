@@ -1,6 +1,6 @@
-import localizations from "../common/localizations.js";
+import resources from "../common/resources.js";
 
-const locales = localizations.map(([locale]) => locale);
+const locales = resources.map(([locale]) => locale);
 const elLocaleSelector = document.getElementById("locale-selector");
 let currentLocale = locales[0];
 
@@ -25,10 +25,10 @@ let personName = "Carl";
 
 elPersonNameInput.value = "Carl";
 elPersonNameInput.addEventListener("input", (event) => {
-  const messages = filteredLocales();
+  const resource = getCurrentResource();
 
   personName = event.target.value;
-  elHelloName.messages = messages;
+  elHelloName.resource = resource;
   elHelloName.args = {
     userName: personName,
   };
@@ -54,35 +54,35 @@ fruits.map((fruit) => {
 });
 elFavoriteFruitSelect.value = favoriteFruit;
 elFavoriteFruitSelect.addEventListener("change", (event) => {
-  const messages = filteredLocales();
+  const resource = getCurrentResource();
 
   favoriteFruit = event.target.value;
-  elFruitList.map((el) => (el.messages = messages));
+  elFruitList.map((el) => (el.resource = resource));
 });
 
 function updateLocalization() {
-  const messages = filteredLocales();
+  const resource = getCurrentResource();
 
-  elHelloNoName.messages = messages;
+  elHelloNoName.resource = resource;
 
-  elSignInOrCancel.messages = messages;
+  elSignInOrCancel.resource = resource;
 
-  elTodayDate.messages = messages;
+  elTodayDate.resource = resource;
   elTodayDate.args = { date: new Date() };
 
-  elHelloName.messages = messages;
+  elHelloName.resource = resource;
   elHelloName.args = {
     userName: personName,
   };
 
-  elTypeName.messages = messages;
+  elTypeName.resource = resource;
 
-  elFavoriteFruitLabel.messages = messages;
-  elFruitList.map((el) => (el.messages = messages));
+  elFavoriteFruitLabel.resource = resource;
+  elFruitList.map((el) => (el.resource = resource));
 }
 
-function filteredLocales() {
-  return localizations.filter(([locale]) => locale === currentLocale);
+function getCurrentResource() {
+  return resources.find(([locale]) => locale === currentLocale) || [];
 }
 
 updateLocalization();

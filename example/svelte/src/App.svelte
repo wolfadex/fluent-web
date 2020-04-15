@@ -1,22 +1,16 @@
 <script>
   import { onMount } from "svelte";
 
-  export let localizations;
+  export let resources;
 
   let currentLocale = "en-US";
-  const locales = localizations.map(([locale]) => locale);
-  let messages = [];
+  const locales = resources.map(([locale]) => locale);
+  let resource = [];
 
-  function updateMessages() {
-    const currentLocalizations = localizations.find(
+  function setCurrentResource() {
+    resource = resources.find(
       ([locale]) => currentLocale === locale
-    );
-
-    if (currentLocalizations) {
-      messages = [currentLocalizations];
-    } else {
-      messages = [];
-    }
+    ) || [];
   }
 
   const today = new Date();
@@ -25,7 +19,7 @@
   let favoriteFruit = "apple";
 
   onMount(() => {
-    updateMessages();
+    setCurrentResource();
   });
 </script>
 
@@ -58,7 +52,7 @@
       value={currentLocale}
       on:change={event => {
         currentLocale = event.target.value;
-        updateMessages();
+        setCurrentResource();
       }}>
       {#each locales as locale}
         <option value={locale}>{locale}</option>
@@ -69,29 +63,29 @@
   <br />
   Basic key-value:
   <br />
-  <fluent-text messageId="hello-no-name" {messages} />
+  <fluent-text messageId="hello-no-name" {resource} />
   <br />
   <br />
   Styled key-value:
   <br />
-  <fluent-text messageId="sign-in-or-cancel" {messages} />
+  <fluent-text messageId="sign-in-or-cancel" {resource} />
   <br />
   <br />
   Today’s Date:
   <br />
-  <fluent-text messageId="today-date" args={{ date: today }} {messages} />
+  <fluent-text messageId="today-date" args={{ date: today }} {resource} />
   <br />
   <br />
   Message with argument:
   <br />
   <input type="text" bind:value={personName} />
   <br />
-  <fluent-text messageId="hello" args={{ userName: personName }} {messages} />
+  <fluent-text messageId="hello" args={{ userName: personName }} {resource} />
   <br />
   <br />
   Input localized:
   <br />
-  <fluent-element messageId="type-name" {messages}>
+  <fluent-element messageId="type-name" {resource}>
     <input type="text" />
   </fluent-element>
   <br />
@@ -99,13 +93,13 @@
   Select with localized options:
   <br />
   <label>
-    <fluent-text messageId="favorite-fruit" {messages} />
+    <fluent-text messageId="favorite-fruit" {resource} />
     <select
       value={favoriteFruit}
       on:change={event => (favoriteFruit = event.target.value)}>
       {#each fruits as fruit}
         <option value={fruit}>
-          <fluent-text messageId={`fruit-${fruit}`} {messages} />
+          <fluent-text messageId={`fruit-${fruit}`} {resource} />
         </option>
       {/each}
     </select>

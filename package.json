@@ -4,6 +4,18 @@
   "main": "./commonjs/index.js",
   "module": "./src/index.js",
   "license": "MIT",
+  "keywords": [
+    "localization",
+    "l10n",
+    "internationalization",
+    "i18n",
+    "locale",
+    "language",
+    "formatting",
+    "translate",
+    "translation",
+    "format"
+  ],
   "scripts": {
     "dev-demo": "parcel example/elm/index.html",
     "build-demo": "parcel build example/elm/index.html -d .",

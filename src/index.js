@@ -1,84 +1,53 @@
-import { FluentBundle, FluentResource } from "@fluent/bundle";
+import { FluentBundle } from "@fluent/bundle";
 import { mapBundleSync } from "@fluent/sequence";
-import { CachedSyncIterable } from "cached-iterable";
 
 const MESSAGE_ID_ATTRIBUTE = "messageId";
 
-class FluentWeb {
-  setBundles(bundles) {
-    this.bundles = CachedSyncIterable.from(bundles);
-  }
+class FluentElement extends HTMLElement {
+  getMessage({ messageId, args }) {
+    if (this._bundle) {
+      const message = this._bundle.getMessage(messageId);
 
-  getMessage({ messageId, args, element }) {
-    if (this.bundles) {
-      const bundle = mapBundleSync(this.bundles, messageId);
+      if (message) {
+        let errors = [];
+        const value = this._bundle.formatPattern(message.value, args, errors);
 
-      if (bundle) {
-        const message = bundle.getMessage(messageId);
-
-        if (message) {
-          let errors = [];
-          const value = bundle.formatPattern(message.value, args, errors);
-
-          if (errors.length > 0) {
-            const errorEvent = new CustomEvent("fluent-web-error", {
-              bubbles: true,
-              detail: {
-                messageId,
-                args,
-                message,
-                errors,
-              },
-            });
-            element.dispatchEvent(errorEvent);
-          }
-
-          return { value, attributes: message.attributes };
-        } else {
+        if (errors.length > 0) {
           const errorEvent = new CustomEvent("fluent-web-error", {
             bubbles: true,
             detail: {
               messageId,
               args,
-              errors: [new Error("Message object not found")],
+              message,
+              errors,
             },
           });
-          element.dispatchEvent(errorEvent);
+          this.dispatchEvent(errorEvent);
         }
+
+        return { value, attributes: message.attributes };
       } else {
         const errorEvent = new CustomEvent("fluent-web-error", {
           bubbles: true,
           detail: {
             messageId,
             args,
-            errors: [
-              new Error(`Bundle with messageId: ${messageId} not found`),
-            ],
+            errors: [new Error("Message object not found")],
           },
         });
-        element.dispatchEvent(errorEvent);
+        this.dispatchEvent(errorEvent);
       }
     }
 
     return null;
-  }
-}
-
-class FluentElement extends HTMLElement {
-  constructor() {
-    super();
-
-    if (window.fluentWeb == null) {
-      window.fluentWeb = new FluentWeb();
-    }
   }
 
   connectedCallback() {
     this.render();
   }
 
-  set messages(newValue) {
-    this.buildBundles(newValue);
+  set resource(newResource) {
+    this.buildBundle(newResource);
     this.render();
   }
 
@@ -97,18 +66,23 @@ class FluentElement extends HTMLElement {
     }
   }
 
-  buildBundles(fetchedMessages) {
-    const bundles = [];
+  buildBundle(newResource) {
+    const [locales, resource] = newResource;
+    
+    this._bundle = new FluentBundle(locales);
+    
+    const errors = this._bundle.addResource(resource);
 
-    for (let [locale, messages] of fetchedMessages) {
-      let resource = new FluentResource(messages);
-      let bundle = new FluentBundle(locale);
-
-      bundle.addResource(resource);
-      bundles.push(bundle);
-    }
-
-    window.fluentWeb.setBundles(bundles);
+    if (errors.length > 0) {
+      const errorEvent = new CustomEvent("fluent-web-error", {
+        bubbles: true,
+        detail: {
+          resource: newResource,
+          errors,
+        },
+      });
+      this.dispatchEvent(errorEvent);
+    } 
   }
 }
 
@@ -127,7 +101,7 @@ customElements.define(
   "fluent-text",
   class extends FluentElement {
     render() {
-      const message = window.fluentWeb.getMessage({
+      const message = this.getMessage({
         messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
         args: this.messageArgs,
         element: this,
@@ -145,7 +119,7 @@ customElements.define(
   class extends FluentElement {
     render() {
       if (this.firstElementChild) {
-        const message = window.fluentWeb.getMessage({
+        const message = this.getMessage({
           messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
           args: this.messageArgs,
           element: this,

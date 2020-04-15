@@ -1,36 +1,38 @@
 # Basics
 
-Under the hood, fluent-web uses the libraries provided by the Fluent team for doing the actual localization. All you need to do is provide the component with an array of `( locale, localizationText )` tuples.
+Under the hood, fluent-web uses the libraries provided by the Fluent team for doing the actual localization. All you need to do is provide the component with an array of `( locales, resource )` tuples.
 
-How these values get to your app is up to you. The Fluent team provides a handy function for writing the localizations inline in your JavaScript code, excellent for testing during development
+The locales should be either a sinlge locale, such as `"en-US"`, or an array of locales, such as `["th-TH", "cs"]` where `"cs"` is the fallback to `"th-TH"`.
 
-```js
-import flt from "@fluent/dedent";
-
-const localization = flt`
-  hello = Hello, Fluent!
-  `;
-```
-
-See [their docs](https://github.com/projectfluent/fluent.js/tree/master/fluent-dedent) for more information on how to use this tool.
-
-Another option is to write `.flt` files and load them over a web request.
-
-Once you have your localization text, pair it up with a locale like so
+The reource should be built up with `FluentResource` like so
 
 ```js
-const enUSLocalization = flt`
-  hello = Hello, Fluent!
-  `;
-const plLocalization = flt`
-  hello = Witaj, FLuent!
-  `;
+import { FluentResource } from "@fluent/bundle";
 
-const enUS = ["en-US", enUSLocalization];
-const pl = ["pl", plLocalization];
+let sourceString = `
+hello = Hello, Fluent Web!
+`;
+
+const resource = new FluentResource(sourceString);
 ```
 
-Now that we have the localization pairs, we can send the one we want to use to our web component as a property
+The `sourceString` can come from wherever you want. It could be written in your code, come from a http request, or even written by the user.
+
+Once you have your resource, pair it up with a locale like so
+
+```js
+const enUSResource = new FluentResource(`
+hello = Hello, Fluent!
+`);
+const plResource = new FluentResource(`
+hello = Witaj, FLuent!
+`);
+
+const enUS = ["en-US", enUSResource];
+const pl = ["pl", plResource];
+```
+
+Now that we have the resource pairs, we can send the one we want to use to our web component as a property
 
 ```html
 <!-- index.html -->
@@ -39,8 +41,8 @@ Now that we have the localization pairs, we can send the one we want to use to o
 
 ```js
 // index.js
-const pl = ["pl", plLocalization];
-document.getElementById("helloEl").setProperty("messages", pl);
+const pl = ["pl", plResource];
+document.getElementById("helloEl").resource = pl;
 ```
 
 Results in
@@ -53,7 +55,7 @@ Witaj, FLuent!
 
 Fluent also supports passing arguments, please see [their docs](https://projectfluent.org/) for more information about how arguments work.
 
-Once you have a localization file with arguments setup, their easy to use.
+Once you have a resource with arguments setup, they're easy to use.
 
 ```html
 <!-- index.html -->
@@ -62,16 +64,16 @@ Once you have a localization file with arguments setup, their easy to use.
 
 ```js
 // index.js
-import flt from "@fluent/dedent";
+import { FluentResource } from "@fluent/bundle";
 
-const enUSLocalization = flt`
-  hello-name = Hello, { $name }!
-  `;
-const enUS = ["en-US", enUSLocalization];
+const enUSResource = new FluentResource(`
+hello-name = Hello, { $name }!
+`);
+const enUS = ["en-US", enUSResource];
 const helloEl = document.getElementById("helloPersonEl");
 
-helloEl.setProperty("args", { name: "Wolfgang" });
-helloEl.setProperty("messages", enUS);
+helloEl.args = { name: "Wolfgang" };
+helloEl.resource = enUS;
 ```
 
 Results in
@@ -82,7 +84,7 @@ Hello, Wolfgang!
 
 # Localization with Properties
 
-Another feature of Fluent localization is support for localized properties. For example, you may want `placeholder` text on your text input like so
+Another feature of Fluent is support for localized properties. For example, you may want `placeholder` text on your input like so
 
 ```html
 <input type="text" placeholder="Your Name" />
@@ -99,21 +101,19 @@ Since this is more than just text, it's also an element, you'll need to specify 
 
 ```js
 // index.js
-import flt from "@fluent/dedent";
+import { FluentResource } from "@fluent/bundle";
 
-const enUSLocalization = flt`
-  name =
-    .placeholder = Your name
-  `;
-const enUS = ["en-US", enUSLocalization];
+const enUSResource = new FluentResource(`
+name =
+  .placeholder = Your name
+`);
+const enUS = ["en-US", enUSResource];
 const nameInput = document.getElementById("nameInput");
 
-nameInput.setProperty("messages", enUS);
+nameInput.resource = enUS;
 ```
 
 Results in a text input with placeholder text of `Your Name`.
-
-Any attributes or properties that aren't part of the fluent-web API are given directly to element you specify.
 
 # Errors
 
@@ -138,23 +138,22 @@ If the error is due to the message not being found, you'll get
 }
 ```
 
-Finally, if the error is due to the bundle not being found you'll get
+Finall, if the error is due to poorly formatted resource being passed in then you'll get
 
 ```js
 {
-  messageId, // The message id passed in
-  args, // Any args passed in, or null
-  errors: [new Error(`Bundle with messageId: ${messageId} not found`)],
+  resource, // The resource you passed in
+  errors, // A list of errors populated by Fluent
 }
 ```
 
 # Framework Support
 
-The great thing about fluent-web being a web component is that we can use it in any front end framework or language that supports web components. The [demo](https://wolfadex.github.io/fluent-web/) is written in [Elm](https://elm-lang.org/), though anything from [Svelte](https://svelte.dev/) to [Vue](https://vuejs.org/) or [Ember](https://emberjs.com/) would work just the same.
+The great thing about fluent-web being a web component is that we can use it in any front end framework or language that supports web components. The [demo](https://wolfadex.github.io/fluent-web/) is written in [Elm](https://elm-lang.org/), and there are additional [examples](../example) in [Svelte](https://svelte.dev/) and vanilla html & javascript.
 
-I hope that this project can help to reduce the amount of time spent re-implementing localization across every front end tool.
+I hope that this project can help to reduce the amount of time spent re-implementing localization across every front end framework.
 
 # Known Issues
 
-- Users of React should look at using [@fluent/react](https://github.com/projectfluent/fluent.js/tree/master/fluent-react) as React has some compatability issues with web components. In this case the issue is that React isn't able to set properties on web components. Another option would be to wrap the fluent-web in a specialized React component. I do not have experience in this so I won't be making any recommendations.
+- Users of React should look at using [@fluent/react](https://github.com/projectfluent/fluent.js/tree/master/fluent-react) as React has some compatability issues with web components. In this case the issue is that React isn't able to set properties on web components. Another option would be to wrap fluent-web in a specialized React component. I do not have experience in this so I won't be making any recommendations.
 - Chromium (Chrome, Brave, Edge, etc.) and Safari browsers don't update the current value of a `select` element when the translation changes. They do update as soon as you interact with the `select`, such as changing its focus. FireFox updates as expected.

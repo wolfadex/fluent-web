@@ -1,7 +1,7 @@
 import { Elm } from "./Example.elm";
-import localizations from "../common/localizations.js";
+import resources from "../common/resources.js";
 
 Elm.Example.init({
   node: document.getElementById("root"),
-  flags: localizations,
+  flags: resources,
 });
