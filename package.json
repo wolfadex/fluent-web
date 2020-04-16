@@ -1,6 +1,6 @@
 {
   "name": "@wolfadex/fluent-web",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "main": "./commonjs/index.js",
   "module": "./src/index.js",
   "license": "MIT",
