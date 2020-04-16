@@ -7,6 +7,7 @@ The locales should be either a sinlge locale, such as `"en-US"`, or an array of 
 The reource should be built up with `FluentResource` like so
 
 ```js
+import "@wolfadex/fluent-web";
 import { FluentResource } from "@fluent/bundle";
 
 let sourceString = `
@@ -64,6 +65,7 @@ Once you have a resource with arguments setup, they're easy to use.
 
 ```js
 // index.js
+import "@wolfadex/fluent-web";
 import { FluentResource } from "@fluent/bundle";
 
 const enUSResource = new FluentResource(`
@@ -101,6 +103,7 @@ Since this is more than just text, it's also an element, you'll need to specify 
 
 ```js
 // index.js
+import "@wolfadex/fluent-web";
 import { FluentResource } from "@fluent/bundle";
 
 const enUSResource = new FluentResource(`
@@ -149,7 +152,7 @@ Finall, if the error is due to poorly formatted resource being passed in then yo
 
 # Framework Support
 
-The great thing about fluent-web being a web component is that we can use it in any front end framework or language that supports web components. The [demo](https://wolfadex.github.io/fluent-web/) is written in [Elm](https://elm-lang.org/), and there are additional [examples](../example) in [Svelte](https://svelte.dev/) and vanilla html & javascript.
+The great thing about fluent-web being a web component is that we can use it in any front end framework or language that supports web components. The [demo](https://wolfadex.github.io/fluent-web/) is written in [Elm](https://elm-lang.org/), and there are additional [examples](https://github.com/wolfadex/fluent-web/tree/master/example) built in [Svelte](https://svelte.dev/) and vanilla html & javascript.
 
 I hope that this project can help to reduce the amount of time spent re-implementing localization across every front end framework.
 
