@@ -44,7 +44,7 @@ For how to build messages, see the [Fluent docs](https://github.com/projectfluen
 
 ## Examples:
 
-- [Elm](.https://github.com/wolfadex/fluent-web/tree/master/example/elm), this is used for the interactive demo
+- [Elm](https://github.com/wolfadex/fluent-web/tree/master/example/elm), this is used for the interactive demo
 - [Svelte](https://github.com/wolfadex/fluent-web/tree/master/example/svelte)
 - [Vanilla HTML & JS](https://github.com/wolfadex/fluent-web/tree/master/example/vanillajs)
 
