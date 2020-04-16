@@ -6,7 +6,7 @@ A web component that uses [Fluent](https://projectfluent.org/) for localization.
 
 | Locale en-US                                            | Locale pl                                         |
 | ------------------------------------------------------- | ------------------------------------------------- |
-| ![example result locale en-US](https://github.com/wolfadex/fluent-web/blob/master/screen_shot_en-us.png) | ![example result locale pl](https://github.com/wolfadex/fluent-web/blob/master/screen_shot_pl.png) |
+| ![example result locale en-US](https://raw.githubusercontent.com/wolfadex/fluent-web/master/screen_shot_en-us.png) | ![example result locale pl](https://raw.githubusercontent.com/wolfadex/fluent-web/master/screen_shot_pl.png) |
 
 ## Basic Usage:
 
