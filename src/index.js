@@ -9,8 +9,14 @@ class FluentElement extends HTMLElement {
       const message = this._bundle.getMessage(messageId);
 
       if (message) {
+        const formatted = { value: null, attributes: {} };
         let errors = [];
-        const value = this._bundle.formatPattern(message.value, args, errors);
+
+        formatted.value = this._bundle.formatPattern(message.value, args, errors);
+
+        Object.entries(message.attributes).forEach(function([name, value]) {
+          formatted.attributes[name] = this._bundle.formatPattern(value, args, errors);
+        });
 
         if (errors.length > 0) {
           const errorEvent = new CustomEvent("fluent-web-error", {
@@ -25,7 +31,7 @@ class FluentElement extends HTMLElement {
           this.dispatchEvent(errorEvent);
         }
 
-        return { value, attributes: message.attributes };
+        return formatted;
       } else {
         const errorEvent = new CustomEvent("fluent-web-error", {
           bubbles: true,
@@ -126,8 +132,8 @@ customElements.define(
         });
 
         if (message) {
-          Object.entries(message.attributes).forEach(([key, val]) => {
-            this.firstElementChild.setAttribute(key, val);
+          Object.entries(message.attributes).forEach(([name, value]) => {
+            this.firstElementChild.setAttribute(name, value);
           });
 
           semiSafeInnerHTML(this.firstElementChild, message);
