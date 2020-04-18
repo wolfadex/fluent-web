@@ -4,7 +4,7 @@ import { mapBundleSync } from "@fluent/sequence";
 const MESSAGE_ID_ATTRIBUTE = "messageId";
 
 class FluentElement extends HTMLElement {
-  getMessage({ messageId, args }) {
+  getMessage({ messageId, args, whitelist = [] }) {
     if (this._bundle) {
       const message = this._bundle.getMessage(messageId);
 
@@ -14,8 +14,10 @@ class FluentElement extends HTMLElement {
 
         formatted.value = this._bundle.formatPattern(message.value, args, errors);
 
-        Object.entries(message.attributes).forEach(function([name, value]) {
-          formatted.attributes[name] = this._bundle.formatPattern(value, args, errors);
+        Object.entries(message.attributes).forEach(([name, value]) => {
+          if (whitelist.includes(name)) {
+            formatted.attributes[name] = this._bundle.formatPattern(value, args, errors);
+          }
         });
 
         if (errors.length > 0) {
@@ -54,6 +56,11 @@ class FluentElement extends HTMLElement {
 
   set resource(newResource) {
     this.buildBundle(newResource);
+    this.render();
+  }
+
+  set attributeWhitelist(whitelist) {
+    this.whitelist = whitelist;
     this.render();
   }
 
@@ -110,7 +117,6 @@ customElements.define(
       const message = this.getMessage({
         messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
         args: this.messageArgs,
-        element: this,
       });
 
       if (message) {
@@ -128,7 +134,7 @@ customElements.define(
         const message = this.getMessage({
           messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
           args: this.messageArgs,
-          element: this,
+          whitelist: this.whitelist
         });
 
         if (message) {

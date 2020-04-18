@@ -85,7 +85,7 @@
   <br />
   Input localized:
   <br />
-  <fluent-element messageId="type-name" {resource}>
+  <fluent-element messageId="type-name" {resource} attributeWhitelist={["placeholder"]}>
     <input type="text" />
   </fluent-element>
   <br />

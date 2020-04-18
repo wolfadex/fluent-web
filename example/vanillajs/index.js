@@ -36,6 +36,9 @@ elPersonNameInput.addEventListener("input", (event) => {
 
 const elHelloName = document.getElementById("helloName");
 const elTypeName = document.getElementById("typeName");
+
+elTypeName.attributeWhitelist = ["placeholder"];
+
 const elFavoriteFruitLabel = document.getElementById("favoriteFruitLabel");
 const fruits = ["apple", "orange", "lemon"];
 let favoriteFruit = fruits[0];

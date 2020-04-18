@@ -341,6 +341,8 @@ view model =
         , Html.node "fluent-element"
             [ messages
             , Html.Attributes.attribute "messageId" "type-name"
+            , Html.Attributes.property "attributeWhitelist" <|
+                Json.Encode.list Json.Encode.string ["placeholder"]
             ]
             [ Html.input
                 [ Html.Events.onInput SetPlaceholderInput

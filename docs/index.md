@@ -114,7 +114,10 @@ const enUS = ["en-US", enUSResource];
 const nameInput = document.getElementById("nameInput");
 
 nameInput.resource = enUS;
+nameInput.attributeWhitelist = ["placeholder"];
 ```
+
+***Note:*** Don't forget to whitelist the attributes you want localized!
 
 Results in a text input with placeholder text of `Your Name`.
 
