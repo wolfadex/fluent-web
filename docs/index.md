@@ -1,39 +1,8 @@
 # Basics
 
-Under the hood, fluent-web uses the libraries provided by the Fluent team for doing the actual localization. All you need to do is provide the component with a tuple of `( locales, resource )`.
+Under the hood, fluent-web uses the libraries provided by the Fluent team for doing the actual localization. All you need to do is provide the component with an array of bundles. See the [Fluent docs](https://projectfluent.org/fluent.js/bundle/) for how to build a bundle of resources.
 
-The locales should be either a sinlge locale, such as `"en-US"`, or an array of locales, such as `["th-TH", "cs"]` where `"cs"` is the fallback to `"th-TH"`.
-
-The reource should be built up with `FluentResource` like so
-
-```js
-import "@wolfadex/fluent-web";
-import { FluentResource } from "@fluent/bundle";
-
-let sourceString = `
-hello = Hello, Fluent Web!
-`;
-
-const resource = new FluentResource(sourceString);
-```
-
-The `sourceString` can come from wherever you want. It could be written in your code, come from a http request, or even written by the user.
-
-Once you have your resource, pair it up with a locale like so
-
-```js
-const enUSResource = new FluentResource(`
-hello = Hello, Fluent!
-`);
-const plResource = new FluentResource(`
-hello = Witaj, FLuent!
-`);
-
-const enUS = ["en-US", enUSResource];
-const pl = ["pl", plResource];
-```
-
-Now that we have the resource tuple, we can send the one we want to use to our web component as a property
+Once you have 1 or more bundles, you can send the one(s) you want to the web component as a property
 
 ```html
 <!-- index.html -->
@@ -42,8 +11,7 @@ Now that we have the resource tuple, we can send the one we want to use to our w
 
 ```js
 // index.js
-const pl = ["pl", plResource];
-document.getElementById("helloEl").resource = pl;
+document.getElementById("helloEl").bundles = yourBundles;
 ```
 
 Results in
@@ -56,7 +24,7 @@ Witaj, FLuent!
 
 Fluent also supports passing arguments, please see [their docs](https://projectfluent.org/) for more information about how arguments work.
 
-Once you have a resource with arguments setup, they're easy to use.
+Once you have a bundle with arguments setup, they're easy to use.
 
 ```html
 <!-- index.html -->
@@ -66,16 +34,18 @@ Once you have a resource with arguments setup, they're easy to use.
 ```js
 // index.js
 import "@wolfadex/fluent-web";
-import { FluentResource } from "@fluent/bundle";
+import { FluentResource, FluentBundle } from "@fluent/bundle";
 
 const enUSResource = new FluentResource(`
 hello-name = Hello, { $name }!
 `);
-const enUS = ["en-US", enUSResource];
+const enUSBundle = new FluentBundle("en-US");
+enUSBundle.addResource(enUSResource);
+
 const helloEl = document.getElementById("helloPersonEl");
 
 helloEl.args = { name: "Wolfgang" };
-helloEl.resource = enUS;
+helloEl.bundles = [enUSBundle];
 ```
 
 Results in
@@ -104,17 +74,19 @@ Since this is more than just text, it's also an element, you'll need to specify 
 ```js
 // index.js
 import "@wolfadex/fluent-web";
-import { FluentResource } from "@fluent/bundle";
+import { FluentResource, FluentBundle } from "@fluent/bundle";
 
 const enUSResource = new FluentResource(`
 name =
   .placeholder = Your name
 `);
-const enUS = ["en-US", enUSResource];
+const enUSBundle = new FluentBundle("en-US");
+enUSBundle.addResource(enUSResource);
+
 const nameInput = document.getElementById("nameInput");
 
-nameInput.resource = enUS;
 nameInput.attributeWhitelist = ["placeholder"];
+nameInput.enUSBundle = [enUSBundle];
 ```
 
 ***Note:*** Don't forget to whitelist the attributes you want localized!
@@ -141,15 +113,6 @@ If the error is due to the message not being found, you'll get
   messageId, // The message id passed in
   args, // Any args passed in, or null
   errors: [new Error("Message object not found")],
-}
-```
-
-Finall, if the error is due to poorly formatted resource being passed in then you'll get
-
-```js
-{
-  resource, // The resource you passed in
-  errors, // A list of errors populated by Fluent
 }
 ```
 
