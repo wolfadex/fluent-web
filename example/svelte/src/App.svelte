@@ -1,4 +1,5 @@
 <script>
+  export let resources;
   import { negotiateLanguages } from '@fluent/langneg';
   import { FluentBundle, FluentResource } from '@fluent/bundle';
 
@@ -119,4 +120,13 @@
       {/each}
     </select>
   </label>
+  <br />
+  <br />
+  Provider-based messages:
+  <br />
+  <fluent-provider bundles={currentBundles}>
+    <fluent-text messageId="hello-no-name"></fluent-text>
+    <br />
+    <fluent-text messageId="sign-in-or-cancel"></fluent-text>
+  </fluent-provider>
 </main>

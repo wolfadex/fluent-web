@@ -5,8 +5,9 @@ const MESSAGE_ID_ATTRIBUTE = "messageId";
 
 class FluentElement extends HTMLElement {
   getMessage({ messageId, args, whitelist = [] }) {
-    if (this._bundles) {
-      const bundle = mapBundleSync(this._bundles, messageId);
+    const bundles = this._bundles || this._providerBundles;
+    if (bundles) {
+      const bundle = mapBundleSync(bundles, messageId);
 
       if (bundle) {
         const message = bundle.getMessage(messageId);
@@ -55,6 +56,21 @@ class FluentElement extends HTMLElement {
   }
 
   connectedCallback() {
+    this.dispatchEvent(new CustomEvent('fluent-bundles-subscribe', {
+      bubbles: true,
+      target: this,
+    }));
+    this.render();
+  }
+  disconnectedCallback() {
+    this.dispatchEvent(new CustomEvent('fluent-bundles-unsubscribe', {
+      bubbles: true,
+      target: this,
+    }));
+  }
+
+  set providerBundles(newBundles) {
+    this._providerBundles = CachedSyncIterable.from(newBundles);
     this.render();
   }
 
@@ -81,6 +97,36 @@ class FluentElement extends HTMLElement {
     if (name === MESSAGE_ID_ATTRIBUTE && oldValue !== newValue) {
       this.render();
     }
+  }
+}
+
+class FluentProvider extends HTMLElement {
+  constructor() {
+    super();
+    this._listeners = [];
+    this.addEventListener('fluent-bundles-subscribe', event => {
+      this._listeners.push(event.target);
+      if (this._bundles) {
+        event.target.providerBundles = this._bundles;
+      }
+    })
+    this.addEventListener('fluent-bundles-unsubscribe', event => {
+      const i = this._listeners.findIndex(event.target);
+      if (i >= 0) {
+        this._listeners.splice(i, 1);
+      }
+    })
+  }
+  get bundles() {
+    return this._bundles;
+  }
+  set bundles(b) {
+    this._bundles = b;
+    this._listeners.forEach(target => {
+      if (this._bundles) {
+        target.providerBundles = this._bundles;
+      }
+    })
   }
 }
 
@@ -133,3 +179,5 @@ customElements.define(
     }
   }
 );
+
+customElements.define("fluent-provider", FluentProvider);

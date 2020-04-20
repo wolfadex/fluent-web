@@ -375,4 +375,20 @@ view model =
                 )
                 allFruit
             )
+        , Html.br [] []
+        , Html.br [] []
+        , Html.text "Provider-based messages:"
+        , Html.br [] []
+        , Html.node "fluent-provider"
+            [ bundless ]
+            [ Html.node "fluent-text"
+                [ Html.Attributes.attribute "messageId" "hello-no-name"
+                ]
+                []
+            , Html.br [] []
+            , Html.node "fluent-text"
+                [ Html.Attributes.attribute "messageId" "sign-in-or-cancel"
+                ]
+                []
+            ]
         ]
