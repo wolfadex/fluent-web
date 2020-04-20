@@ -1,4 +1,4 @@
-module Example exposing (main)
+port module Example exposing (main)
 
 import BeautifulExample
 import Color
@@ -44,7 +44,7 @@ main =
         , color = Just Color.blue
         , maxWidth = 400
         , githubUrl = Just "https://github.com/wolfadex/fluent-web"
-        , documentationUrl = Nothing
+        , documentationUrl = Just "https://github.com/wolfadex/fluent-web/blob/master/docs/index.md"
         }
         { init = init
         , view = view
@@ -54,7 +54,7 @@ main =
 
 
 type alias Model =
-    { messages : List ( Locale, Resource )
+    { bundles : Bundles
     , activeLocale : Locale
     , personName : String
     , time : Posix
@@ -71,9 +71,10 @@ type Msg
     | SetTime Posix
     | SetPlaceholderInput String
     | SetFavoriteFruit String
+    | GotBundles Bundles
 
 
-type alias Resource =
+type alias Bundles =
     Value
 
 
@@ -191,24 +192,18 @@ localeFromString localeStr =
 
 
 type alias Flags =
-    List ( String, Resource )
+    { bundles : Bundles
+    , initialLocale : String
+    }
 
 
 init : Flags -> ( Model, Cmd Msg )
-init messages =
-    ( { messages =
-            List.foldl
-                (\( localeStr, localization ) res ->
-                    case localeFromString localeStr of
-                        Ok locale ->
-                            ( locale, localization ) :: res
-
-                        Err _ ->
-                            res
-                )
-                []
-                messages
-      , activeLocale = EnUS
+init { bundles, initialLocale } =
+    ( { bundles = bundles
+      , activeLocale =
+            localeFromString initialLocale
+                |> Result.toMaybe
+                |> Maybe.withDefault EnUS
       , personName = "Carl"
       , time = Time.millisToPosix 0
       , zone = Time.utc
@@ -224,19 +219,23 @@ init messages =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    gotBundles GotBundles
+
+
+port gotBundles : (Bundles -> msg) -> Sub msg
+
+
+port changeDesirecLocale : List String -> Cmd msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ChangeLocale newLocale ->
-            case localeFromString newLocale of
-                Ok locale ->
-                    ( { model | activeLocale = locale }, Cmd.none )
+        GotBundles bundles ->
+            ( { model | bundles = bundles }, Cmd.none )
 
-                Err _ ->
-                    ( model, Cmd.none )
+        ChangeLocale newLocale ->
+            ( model, changeDesirecLocale [newLocale] )
 
         SetPersonName name ->
             ( { model | personName = name }, Cmd.none )
@@ -262,13 +261,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
-        messages =
-            model.messages
-                |> List.filter (\( locale, _ ) -> model.activeLocale == locale)
-                |> List.head
-                |> Maybe.map encodeResources
-                |> Maybe.withDefault (Json.Encode.list identity [])
-                |> Html.Attributes.property "resource"
+        bundless =
+            model.bundles
+                |> Html.Attributes.property "bundles"
     in
     Html.div
         []
@@ -291,7 +286,7 @@ view model =
         , Html.text "Basic key-value:"
         , Html.br [] []
         , Html.node "fluent-text"
-            [ messages
+            [ bundless
             , Html.Attributes.attribute "messageId" "hello-no-name"
             ]
             []
@@ -300,7 +295,7 @@ view model =
         , Html.text "Styled key-value:"
         , Html.br [] []
         , Html.node "fluent-text"
-            [ messages
+            [ bundless
             , Html.Attributes.attribute "messageId" "sign-in-or-cancel"
             ]
             []
@@ -309,7 +304,7 @@ view model =
         , Html.text "Today’s Date:"
         , Html.br [] []
         , Html.node "fluent-text"
-            [ messages
+            [ bundless
             , Html.Attributes.attribute "messageId" "today-date"
             , Html.Attributes.property "args" <|
                 Json.Encode.object
@@ -327,7 +322,7 @@ view model =
             []
         , Html.br [] []
         , Html.node "fluent-text"
-            [ messages
+            [ bundless
             , Html.Attributes.attribute "messageId" "hello"
             , Html.Attributes.property "args" <|
                 Json.Encode.object
@@ -339,8 +334,10 @@ view model =
         , Html.text "Input localized:"
         , Html.br [] []
         , Html.node "fluent-element"
-            [ messages
+            [ bundless
             , Html.Attributes.attribute "messageId" "type-name"
+            , Html.Attributes.property "attributeWhitelist" <|
+                Json.Encode.list Json.Encode.string ["placeholder"]
             ]
             [ Html.input
                 [ Html.Events.onInput SetPlaceholderInput
@@ -355,7 +352,7 @@ view model =
         , Html.label
             []
             [ Html.node "fluent-text"
-                [ messages
+                [ bundless
                 , Html.Attributes.attribute "messageId" "favorite-fruit"
                 ]
                 []
@@ -370,7 +367,7 @@ view model =
                         [ Html.Attributes.value (fruitToString fruit)
                         ]
                         [ Html.node "fluent-text"
-                            [ messages
+                            [ bundless
                             , Html.Attributes.attribute "messageId" ("fruit-" ++ fruitToString fruit)
                             ]
                             []
@@ -379,9 +376,3 @@ view model =
                 allFruit
             )
         ]
-
-
-encodeResources : ( Locale, Resource ) -> Value
-encodeResources ( locale, resource ) =
-    Json.Encode.list identity
-        [ Json.Encode.string (localeToString locale), resource ]

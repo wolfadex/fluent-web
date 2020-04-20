@@ -1,47 +1,53 @@
-import { FluentBundle } from "@fluent/bundle";
 import { mapBundleSync } from "@fluent/sequence";
+import { CachedSyncIterable } from "cached-iterable";
 
 const MESSAGE_ID_ATTRIBUTE = "messageId";
 
 class FluentElement extends HTMLElement {
-  getMessage({ messageId, args }) {
-    if (this._bundle) {
-      const message = this._bundle.getMessage(messageId);
+  getMessage({ messageId, args, whitelist = [] }) {
+    if (this._bundles) {
+      const bundle = mapBundleSync(this._bundles, messageId);
 
-      if (message) {
-        const formatted = { value: null, attributes: {} };
-        let errors = [];
+      if (bundle) {
+        const message = bundle.getMessage(messageId);
 
-        formatted.value = this._bundle.formatPattern(message.value, args, errors);
+        if (message) {
+          const formatted = { value: null, attributes: {} };
+          let errors = [];
 
-        Object.entries(message.attributes).forEach(function([name, value]) {
-          formatted.attributes[name] = this._bundle.formatPattern(value, args, errors);
-        });
+          formatted.value = bundle.formatPattern(message.value, args, errors);
 
-        if (errors.length > 0) {
+          Object.entries(message.attributes).forEach(([name, value]) => {
+            if (whitelist.includes(name)) {
+              formatted.attributes[name] = bundle.formatPattern(value, args, errors);
+            }
+          });
+
+          if (errors.length > 0) {
+            const errorEvent = new CustomEvent("fluent-web-error", {
+              bubbles: true,
+              detail: {
+                messageId,
+                args,
+                message,
+                errors,
+              },
+            });
+            this.dispatchEvent(errorEvent);
+          }
+
+          return formatted;
+        } else {
           const errorEvent = new CustomEvent("fluent-web-error", {
             bubbles: true,
             detail: {
               messageId,
               args,
-              message,
-              errors,
+              errors: [new Error("Message object not found")],
             },
           });
           this.dispatchEvent(errorEvent);
         }
-
-        return formatted;
-      } else {
-        const errorEvent = new CustomEvent("fluent-web-error", {
-          bubbles: true,
-          detail: {
-            messageId,
-            args,
-            errors: [new Error("Message object not found")],
-          },
-        });
-        this.dispatchEvent(errorEvent);
       }
     }
 
@@ -52,8 +58,13 @@ class FluentElement extends HTMLElement {
     this.render();
   }
 
-  set resource(newResource) {
-    this.buildBundle(newResource);
+  set bundles(newBundles) {
+    this._bundles = CachedSyncIterable.from(newBundles);
+    this.render();
+  }
+
+  set attributeWhitelist(whitelist) {
+    this.whitelist = whitelist;
     this.render();
   }
 
@@ -70,25 +81,6 @@ class FluentElement extends HTMLElement {
     if (name === MESSAGE_ID_ATTRIBUTE && oldValue !== newValue) {
       this.render();
     }
-  }
-
-  buildBundle(newResource) {
-    const [locales, resource] = newResource;
-    
-    this._bundle = new FluentBundle(locales);
-    
-    const errors = this._bundle.addResource(resource);
-
-    if (errors.length > 0) {
-      const errorEvent = new CustomEvent("fluent-web-error", {
-        bubbles: true,
-        detail: {
-          resource: newResource,
-          errors,
-        },
-      });
-      this.dispatchEvent(errorEvent);
-    } 
   }
 }
 
@@ -110,7 +102,6 @@ customElements.define(
       const message = this.getMessage({
         messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
         args: this.messageArgs,
-        element: this,
       });
 
       if (message) {
@@ -128,7 +119,7 @@ customElements.define(
         const message = this.getMessage({
           messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
           args: this.messageArgs,
-          element: this,
+          whitelist: this.whitelist
         });
 
         if (message) {

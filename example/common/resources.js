@@ -23,7 +23,7 @@ fruit-lemon = Lemon
 
 const pl = new FluentResource(`
 hello = Cześć { $userName }!
-hello-no-name = Witaj nieznajomy!
+# hello-no-name = Witaj nieznajomy!
 type-name =
     .placeholder = Twoje imię
 
@@ -107,10 +107,10 @@ fruit-orange = Oranĝo
 fruit-lemon = Citrono
 `);
 
-export default [
-  ["en-US", enUS],
-  ["pl", pl],
-  ["cs", cs],
-  ["th-TH", thTH],
-  ["eo", eo],
-];
+export default {
+  "en-US": enUS,
+  "pl": pl,
+  "cs": cs,
+  "th-TH": thTH,
+  "eo": eo,
+};

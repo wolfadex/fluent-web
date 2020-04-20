@@ -15,17 +15,17 @@ A web component that uses [Fluent](https://projectfluent.org/) for localization.
 
 ```js
 import "@wolfadex/fluent-web"
-import { FluentResource } from "@fluent/bundle";
+import { FluentResource, FluentBundle } from "@fluent/bundle";
 
 const resource = new FluentResource(`
 hello = Hello, Fluent!
 `);
+const bundle = new FluentBundle("en-US");
+bundles.addResource(resource);
+
 const textEl = document.getElementById("my-text-element");
 
-textEl.resource = [
-  "en-US",
-  resource,
-];
+textEl.bundles = [bundle];
 ```
 
 HTML:

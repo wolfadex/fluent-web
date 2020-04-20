@@ -1,10 +1,34 @@
+import { negotiateLanguages } from '@fluent/langneg';
+import { FluentBundle, FluentResource } from '@fluent/bundle';
 import resources from "../common/resources.js";
 
-const locales = resources.map(([locale]) => locale);
-const elLocaleSelector = document.getElementById("locale-selector");
-let currentLocale = locales[0];
+const supportedLocales = Object.keys(resources);
 
-locales.map((locale) => {
+function getCurrentLocales(desiredLocales) {
+  return negotiateLanguages(
+        desiredLocales,
+        supportedLocales,
+        { defaultLocale: 'en-US' }
+    )
+}
+
+function getBundles(desiredLocales) {
+    const currentLocales = getCurrentLocales(desiredLocales);
+    const bundles = [];
+
+    for (const locale of currentLocales) {
+        const bundle = new FluentBundle(locale);
+        bundle.addResource(resources[locale]);
+        bundles.push(bundle)
+    }
+
+    return bundles;
+}
+
+const elLocaleSelector = document.getElementById("locale-selector");
+let currentLocale = getCurrentLocales(navigator.languages)[0];
+
+supportedLocales.map((locale) => {
   const option = document.createElement("option");
   option.value = locale;
   option.innerText = locale;
@@ -25,10 +49,10 @@ let personName = "Carl";
 
 elPersonNameInput.value = "Carl";
 elPersonNameInput.addEventListener("input", (event) => {
-  const resource = getCurrentResource();
+  const bundles = getBundles([currentLocale]);
 
   personName = event.target.value;
-  elHelloName.resource = resource;
+  elHelloName.bundles = bundles;
   elHelloName.args = {
     userName: personName,
   };
@@ -36,6 +60,9 @@ elPersonNameInput.addEventListener("input", (event) => {
 
 const elHelloName = document.getElementById("helloName");
 const elTypeName = document.getElementById("typeName");
+
+elTypeName.attributeWhitelist = ["placeholder"];
+
 const elFavoriteFruitLabel = document.getElementById("favoriteFruitLabel");
 const fruits = ["apple", "orange", "lemon"];
 let favoriteFruit = fruits[0];
@@ -54,35 +81,31 @@ fruits.map((fruit) => {
 });
 elFavoriteFruitSelect.value = favoriteFruit;
 elFavoriteFruitSelect.addEventListener("change", (event) => {
-  const resource = getCurrentResource();
+  const bundles = getBundles([currentLocale]);
 
   favoriteFruit = event.target.value;
-  elFruitList.map((el) => (el.resource = resource));
+  elFruitList.map((el) => (el.bundles = bundles));
 });
 
 function updateLocalization() {
-  const resource = getCurrentResource();
+  const bundles = getBundles([currentLocale]);
 
-  elHelloNoName.resource = resource;
+  elHelloNoName.bundles = bundles;
 
-  elSignInOrCancel.resource = resource;
+  elSignInOrCancel.bundles = bundles;
 
-  elTodayDate.resource = resource;
+  elTodayDate.bundles = bundles;
   elTodayDate.args = { date: new Date() };
 
-  elHelloName.resource = resource;
+  elHelloName.bundles = bundles;
   elHelloName.args = {
     userName: personName,
   };
 
-  elTypeName.resource = resource;
+  elTypeName.bundles = bundles;
 
-  elFavoriteFruitLabel.resource = resource;
-  elFruitList.map((el) => (el.resource = resource));
-}
-
-function getCurrentResource() {
-  return resources.find(([locale]) => locale === currentLocale) || [];
+  elFavoriteFruitLabel.bundles = bundles;
+  elFruitList.map((el) => (el.bundles = bundles));
 }
 
 updateLocalization();
