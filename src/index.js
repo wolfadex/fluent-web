@@ -56,17 +56,21 @@ class FluentElement extends HTMLElement {
   }
 
   connectedCallback() {
-    this.dispatchEvent(new CustomEvent('fluent-bundles-subscribe', {
-      bubbles: true,
-      target: this,
-    }));
+    this.dispatchEvent(
+      new CustomEvent("fluent-bundles-subscribe", {
+        bubbles: true,
+        target: this,
+      })
+    );
     this.render();
   }
   disconnectedCallback() {
-    this.dispatchEvent(new CustomEvent('fluent-bundles-unsubscribe', {
-      bubbles: true,
-      target: this,
-    }));
+    this.dispatchEvent(
+      new CustomEvent("fluent-bundles-unsubscribe", {
+        bubbles: true,
+        target: this,
+      })
+    );
   }
 
   set providerBundles(newBundles) {
@@ -104,29 +108,29 @@ class FluentProvider extends HTMLElement {
   constructor() {
     super();
     this._listeners = [];
-    this.addEventListener('fluent-bundles-subscribe', event => {
+    this.addEventListener("fluent-bundles-subscribe", (event) => {
       this._listeners.push(event.target);
       if (this._bundles) {
         event.target.providerBundles = this._bundles;
       }
-    })
-    this.addEventListener('fluent-bundles-unsubscribe', event => {
+    });
+    this.addEventListener("fluent-bundles-unsubscribe", (event) => {
       const i = this._listeners.findIndex(event.target);
       if (i >= 0) {
         this._listeners.splice(i, 1);
       }
-    })
+    });
   }
   get bundles() {
     return this._bundles;
   }
   set bundles(b) {
     this._bundles = b;
-    this._listeners.forEach(target => {
+    this._listeners.forEach((target) => {
       if (this._bundles) {
         target.providerBundles = this._bundles;
       }
-    })
+    });
   }
 }
 
