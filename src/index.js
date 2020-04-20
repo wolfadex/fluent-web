@@ -1,5 +1,4 @@
 import { mapBundleSync } from "@fluent/sequence";
-import { FluentBundle } from '@fluent/bundle';
 import { CachedSyncIterable } from "cached-iterable";
 
 const MESSAGE_ID_ATTRIBUTE = "messageId";

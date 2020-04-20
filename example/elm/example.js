@@ -30,7 +30,7 @@ const app = Elm.Example.init({
   node: document.getElementById("root"),
   flags: {
   	bundles: getBundles(navigator.languages,),
-  	initialLocale: getCurrentLocales(navigator.languages,)[0],
+  	initialLocale: getCurrentLocales(navigator.languages)[0],
   }
 });
 

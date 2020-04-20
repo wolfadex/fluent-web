@@ -1,26 +1,41 @@
 <script>
-  import { onMount } from "svelte";
+  import { negotiateLanguages } from '@fluent/langneg';
+  import { FluentBundle, FluentResource } from '@fluent/bundle';
 
-  export let resources;
+  const supportedLocales = Object.keys(resources);
 
-  let currentLocale = "en-US";
-  const locales = resources.map(([locale]) => locale);
-  let resource = [];
+  function getCurrentLocales(desiredLocales) {
+    return negotiateLanguages(
+          desiredLocales,
+          supportedLocales,
+          { defaultLocale: 'en-US' }
+      )
+  }
 
-  function setCurrentResource() {
-    resource = resources.find(
-      ([locale]) => currentLocale === locale
-    ) || [];
+  function getBundles(desiredLocales) {
+      const currentLocales = getCurrentLocales(desiredLocales);
+      const bundles = [];
+
+      for (const locale of currentLocales) {
+          const bundle = new FluentBundle(locale);
+          bundle.addResource(resources[locale]);
+          bundles.push(bundle)
+      }
+
+      return bundles;
+  }
+
+  let currentBundles = getBundles(navigator.languages);
+  let currentLocale = getCurrentLocales(navigator.languages)[0];
+
+  function setCurrentBundles() {
+    currentBundles = getBundles([currentLocale]);
   }
 
   const today = new Date();
   let personName = "Carl";
   const fruits = ["apple", "orange", "lemon"];
   let favoriteFruit = "apple";
-
-  onMount(() => {
-    setCurrentResource();
-  });
 </script>
 
 <style>
@@ -52,9 +67,9 @@
       value={currentLocale}
       on:change={event => {
         currentLocale = event.target.value;
-        setCurrentResource();
+        setCurrentBundles();
       }}>
-      {#each locales as locale}
+      {#each supportedLocales as locale}
         <option value={locale}>{locale}</option>
       {/each}
     </select>
@@ -63,29 +78,29 @@
   <br />
   Basic key-value:
   <br />
-  <fluent-text messageId="hello-no-name" {resource} />
+  <fluent-text messageId="hello-no-name" bundles={currentBundles} />
   <br />
   <br />
   Styled key-value:
   <br />
-  <fluent-text messageId="sign-in-or-cancel" {resource} />
+  <fluent-text messageId="sign-in-or-cancel" bundles={currentBundles} />
   <br />
   <br />
   Today’s Date:
   <br />
-  <fluent-text messageId="today-date" args={{ date: today }} {resource} />
+  <fluent-text messageId="today-date" args={{ date: today }} bundles={currentBundles} />
   <br />
   <br />
   Message with argument:
   <br />
   <input type="text" bind:value={personName} />
   <br />
-  <fluent-text messageId="hello" args={{ userName: personName }} {resource} />
+  <fluent-text messageId="hello" args={{ userName: personName }} bundles={currentBundles} />
   <br />
   <br />
   Input localized:
   <br />
-  <fluent-element messageId="type-name" {resource} attributeWhitelist={["placeholder"]}>
+  <fluent-element messageId="type-name" bundles={currentBundles} attributeWhitelist={["placeholder"]}>
     <input type="text" />
   </fluent-element>
   <br />
@@ -93,13 +108,13 @@
   Select with localized options:
   <br />
   <label>
-    <fluent-text messageId="favorite-fruit" {resource} />
+    <fluent-text messageId="favorite-fruit" bundles={currentBundles} />
     <select
       value={favoriteFruit}
       on:change={event => (favoriteFruit = event.target.value)}>
       {#each fruits as fruit}
         <option value={fruit}>
-          <fluent-text messageId={`fruit-${fruit}`} {resource} />
+          <fluent-text messageId={`fruit-${fruit}`} bundles={currentBundles} />
         </option>
       {/each}
     </select>
