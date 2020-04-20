@@ -116,6 +116,27 @@ If the error is due to the message not being found, you'll get
 }
 ```
 
+# Provider
+
+Assigning bundles to large numbers of elements can sometimes be inconvenient. `fluent-provider` can do this for you: set only the provider's bundles, and the provider will keep its children up to date.
+
+```html
+<!-- index.html -->
+<fluent-provider>
+  <fluent-text messageId="hello"></fluent-text>
+  <fluent-element messageId="name">
+    <input type="text" />
+  </fluent-element>
+</fluent-provider>
+```
+
+```js
+// index.js
+document.getElementsByTagName("fluent-provider")[0].bundles = yourBundles;
+```
+
+Bundles assigned to a single element will take priority over those assigned by a provider.
+
 # Framework Support
 
 The great thing about fluent-web being a web component is that we can use it in any front end framework or language that supports web components. The [demo](https://wolfadex.github.io/fluent-web/) is written in [Elm](https://elm-lang.org/), and there are additional [examples](https://github.com/wolfadex/fluent-web/tree/master/example) built in [Svelte](https://svelte.dev/) and vanilla html & javascript.
