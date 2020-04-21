@@ -45,6 +45,7 @@ const elHelloNoName = document.getElementById("helloNoName");
 const elSignInOrCancel = document.getElementById("signInOrCancel");
 const elTodayDate = document.getElementById("todayDate");
 const elPersonNameInput = document.getElementById("personNameInput");
+const elProvider = document.getElementsByTagName("fluent-provider")[0];
 let personName = "Carl";
 
 elPersonNameInput.value = "Carl";
@@ -106,6 +107,8 @@ function updateLocalization() {
 
   elFavoriteFruitLabel.bundles = bundles;
   elFruitList.map((el) => (el.bundles = bundles));
+
+  elProvider.bundles = bundles;
 }
 
 updateLocalization();
