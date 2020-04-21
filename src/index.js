@@ -74,12 +74,12 @@ class FluentElement extends HTMLElement {
   }
 
   set providerBundles(newBundles) {
-    this._providerBundles = CachedSyncIterable.from(newBundles);
+    this._providerBundles = cacheBundles(this, newBundles);
     this.render();
   }
 
   set bundles(newBundles) {
-    this._bundles = CachedSyncIterable.from(newBundles);
+    this._bundles = cacheBundles(this, newBundles);
     this.render();
   }
 
@@ -110,9 +110,7 @@ class FluentProvider extends HTMLElement {
     this._listeners = [];
     this.addEventListener("fluent-bundles-subscribe", (event) => {
       this._listeners.push(event.target);
-      if (this._bundles) {
-        event.target.providerBundles = this._bundles;
-      }
+      event.target.providerBundles = this._bundles;
     });
     this.addEventListener("fluent-bundles-unsubscribe", (event) => {
       const i = this._listeners.findIndex(event.target);
@@ -124,14 +122,38 @@ class FluentProvider extends HTMLElement {
   get bundles() {
     return this._bundles;
   }
-  set bundles(b) {
-    this._bundles = b;
+  set bundles(newBundles) {
+    this._bundles = cacheBundles(this, newBundles);
     this._listeners.forEach((target) => {
-      if (this._bundles) {
-        target.providerBundles = this._bundles;
-      }
+      target.providerBundles = this._bundles;
     });
   }
+}
+
+function cacheBundles(el, bundles) {
+  // Allow iterables (usually an array) or null
+  if (bundles) {
+    // Already cached, don't cache it twice
+    if (bundles.constructor === CachedSyncIterable) {
+      return bundles;
+    }
+    // Iterable check: https://stackoverflow.com/a/32538867/2782048
+    if (typeof bundles[Symbol.iterator] === "function") {
+      return CachedSyncIterable.from(bundles);
+    }
+  }
+  if (bundles !== null) {
+    el.dispatchEvent(
+      new CustomEvent("fluent-web-error", {
+        bubbles: true,
+        detail: {
+          bundles,
+          errors: [new Error("bundles property must be iterable or null")],
+        },
+      }),
+    );
+  }
+  return null;
 }
 
 function semiSafeInnerHTML(el, message) {
