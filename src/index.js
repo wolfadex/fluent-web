@@ -17,7 +17,7 @@ class FluentElement extends HTMLElement {
           let errors = [];
 
           const preparedArgs = Object.assign({}, unsafeArgs || {});
-          const escaper = document.createElement("template");
+          const escaper = document.createElement("div");
           for (let [name, arg] of Object.entries(args || {})) {
             if (typeof arg === "string") {
               escaper.innerText = arg;
