@@ -108,16 +108,16 @@ class FluentProvider extends HTMLElement {
   constructor() {
     super();
     this._listeners = [];
-    this.addEventListener("fluent-bundles-subscribe", (event) => {
-      this._listeners.push(event.target);
-      event.target.providerBundles = this._bundles;
-    });
-    this.addEventListener("fluent-bundles-unsubscribe", (event) => {
-      const i = this._listeners.findIndex(event.target);
-      if (i >= 0) {
-        this._listeners.splice(i, 1);
-      }
-    });
+  }
+  connectedCallback() {
+    this._listeners = [];
+    this.addEventListener("fluent-bundles-subscribe", bundlesSubscribe);
+    this.addEventListener("fluent-bundles-unsubscribe", bundlesUnsubscribe);
+  }
+  disconnectedCallback() {
+    this._listeners = [];
+    this.removeEventListener("fluent-bundles-subscribe", bundlesSubscribe);
+    this.removeEventListener("fluent-bundles-unsubscribe", bundlesUnsubscribe);
   }
   get bundles() {
     return this._bundles;
@@ -127,6 +127,18 @@ class FluentProvider extends HTMLElement {
     this._listeners.forEach((target) => {
       target.providerBundles = this._bundles;
     });
+  }
+}
+function bundlesSubscribe(event) {
+  const provider = event.currentTarget;
+  provider._listeners.push(event.target);
+  event.target.providerBundles = provider._bundles;
+}
+function bundlesUnsubscribe(event) {
+  const provider = event.currentTarget;
+  const i = provider._listeners.findIndex(event.target);
+  if (i >= 0) {
+    provider._listeners.splice(i, 1);
   }
 }
 
