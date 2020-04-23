@@ -26,6 +26,11 @@ function getBundles(desiredLocales) {
     return bundles;
 }
 
+// Log translation errors
+window.addEventListener("fluent-web-error", function(event) {
+  console.error(event);
+})
+
 const app = Elm.Example.init({
   node: document.getElementById("root"),
   flags: {

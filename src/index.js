@@ -16,7 +16,9 @@ class FluentElement extends HTMLElement {
           const formatted = { value: null, attributes: {} };
           let errors = [];
 
-          formatted.value = bundle.formatPattern(message.value, args, errors);
+          if (message.value) {
+            formatted.value = bundle.formatPattern(message.value, args, errors);
+          }
 
           Object.entries(message.attributes).forEach(([name, value]) => {
             if (whitelist.includes(name)) {
