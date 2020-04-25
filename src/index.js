@@ -4,7 +4,7 @@ import { CachedSyncIterable } from "cached-iterable";
 const MESSAGE_ID_ATTRIBUTE = "messageId";
 
 class FluentElement extends HTMLElement {
-  getMessage({ messageId, args, whitelist = [] }) {
+  getMessage({ messageId, args, unsafeArgs, whitelist = [] }) {
     const bundles = this._bundles || this._providerBundles;
     if (bundles) {
       const bundle = mapBundleSync(bundles, messageId);
@@ -16,13 +16,24 @@ class FluentElement extends HTMLElement {
           const formatted = { value: null, attributes: {} };
           let errors = [];
 
+          const preparedArgs = Object.assign({}, unsafeArgs || {});
+          const escaper = document.createElement("div");
+          for (let [name, arg] of Object.entries(args || {})) {
+            if (typeof arg === "string") {
+              escaper.innerText = arg;
+              preparedArgs[name] = escaper.innerHTML;
+            }
+            else {
+              preparedArgs[name] = arg;
+            }
+          }
           if (message.value) {
-            formatted.value = bundle.formatPattern(message.value, args, errors);
+            formatted.value = bundle.formatPattern(message.value, preparedArgs, errors);
           }
 
           Object.entries(message.attributes).forEach(([name, value]) => {
             if (whitelist.includes(name)) {
-              formatted.attributes[name] = bundle.formatPattern(value, args, errors);
+              formatted.attributes[name] = bundle.formatPattern(value, preparedArgs, errors);
             }
           });
 
@@ -31,7 +42,7 @@ class FluentElement extends HTMLElement {
               bubbles: true,
               detail: {
                 messageId,
-                args,
+                args: preparedArgs,
                 message,
                 errors,
               },
@@ -92,6 +103,11 @@ class FluentElement extends HTMLElement {
 
   set args(newValue) {
     this.messageArgs = newValue;
+    this.render();
+  }
+
+  set unsafeArgs(newValue) {
+    this.messageUnsafeArgs = newValue;
     this.render();
   }
 
@@ -188,6 +204,7 @@ customElements.define(
       const message = this.getMessage({
         messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
         args: this.messageArgs,
+        unsafeArgs: this.messageUnsafeArgs,
       });
 
       if (message) {
@@ -205,6 +222,7 @@ customElements.define(
         const message = this.getMessage({
           messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
           args: this.messageArgs,
+          unsafeArgs: this.messageUnsafeArgs,
           whitelist: this.whitelist
         });
 
