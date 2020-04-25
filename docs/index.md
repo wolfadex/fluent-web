@@ -93,6 +93,27 @@ nameInput.enUSBundle = [enUSBundle];
 
 Results in a text input with placeholder text of `Your Name`.
 
+# Provider
+
+Assigning bundles to large numbers of elements can sometimes be inconvenient. `fluent-provider` can do this for you: set only the provider's bundles, and the provider will keep its children up to date.
+
+```html
+<!-- index.html -->
+<fluent-provider>
+  <fluent-text messageId="hello"></fluent-text>
+  <fluent-element messageId="name">
+    <input type="text" />
+  </fluent-element>
+</fluent-provider>
+```
+
+```js
+// index.js
+document.getElementsByTagName("fluent-provider")[0].bundles = yourBundles;
+```
+
+Bundles assigned to a single element will take priority over those assigned by a provider.
+
 # Errors
 
 If there are any errors encountered while localizing, a event named `fluent-web-error` is dispatched. If the error arises while running Fluent's `bundle.formatPattern()`, the `event.detail` will look like
@@ -116,26 +137,18 @@ If the error is due to the message not being found, you'll get
 }
 ```
 
-# Provider
-
-Assigning bundles to large numbers of elements can sometimes be inconvenient. `fluent-provider` can do this for you: set only the provider's bundles, and the provider will keep its children up to date.
-
-```html
-<!-- index.html -->
-<fluent-provider>
-  <fluent-text messageId="hello"></fluent-text>
-  <fluent-element messageId="name">
-    <input type="text" />
-  </fluent-element>
-</fluent-provider>
-```
+If you try to pass a set of bundles that isn't iterable, you'll get
 
 ```js
-// index.js
-document.getElementsByTagName("fluent-provider")[0].bundles = yourBundles;
+{
+  bundles,
+  errors: [new Error("bundles property must be iterable or null")],
+}
 ```
 
-Bundles assigned to a single element will take priority over those assigned by a provider.
+# Saftey
+
+By default, `args` are sanatized to prevent XSS and other vulnerabilities. If you'd like your args to not be sanatized you can instead use `unsafeArgs`. ***Don't forget***, if you decide to switch from `args` to `unsafeArgs` at runtime to clear out `args` by setting it to `null`.
 
 # Framework Support
 
