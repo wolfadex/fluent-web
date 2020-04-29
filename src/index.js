@@ -1,7 +1,7 @@
 import { mapBundleSync } from "@fluent/sequence";
 import { CachedSyncIterable } from "cached-iterable";
 
-const MESSAGE_ID_ATTRIBUTE = "messageId";
+const MESSAGE_ID_ATTRIBUTE = "message-id";
 
 class FluentElement extends HTMLElement {
   getMessage({ messageId, args, unsafeArgs, whitelist = [] }) {
