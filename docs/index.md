@@ -6,7 +6,7 @@ Once you have 1 or more bundles, you can send the one(s) you want to the web com
 
 ```html
 <!-- index.html -->
-<fluent-text messageId="hello" id="helloEl"></fluent-text>
+<fluent-text messageid="hello" id="helloEl"></fluent-text>
 ```
 
 ```js
@@ -28,7 +28,7 @@ Once you have a bundle with arguments setup, they're easy to use.
 
 ```html
 <!-- index.html -->
-<fluent-text messageId="hello-name" id="helloPersonEl"></fluent-text>
+<fluent-text messageid="hello-name" id="helloPersonEl"></fluent-text>
 ```
 
 ```js
@@ -66,7 +66,7 @@ Since this is more than just text, it's also an element, you'll need to specify 
 
 ```html
 <!-- index.html -->
-<fluent-element messageId="name" id="nameInput">
+<fluent-element messageid="name" id="nameInput">
   <input type="text" />
 </fluent-element>
 ```
@@ -100,8 +100,8 @@ Assigning bundles to large numbers of elements can sometimes be inconvenient. `f
 ```html
 <!-- index.html -->
 <fluent-provider>
-  <fluent-text messageId="hello"></fluent-text>
-  <fluent-element messageId="name">
+  <fluent-text messageid="hello"></fluent-text>
+  <fluent-element messageid="name">
     <input type="text" />
   </fluent-element>
 </fluent-provider>
@@ -120,7 +120,7 @@ If there are any errors encountered while localizing, a event named `fluent-web-
 
 ```js
 {
-  messageId, // The message id passed in
+  messageid, // The message id passed in
   args, // Any args passed in, or null
   message, // The message object returned by Fluent
   errors, // A list of errors populated by Fluent
@@ -131,7 +131,7 @@ If the error is due to the message not being found, you'll get
 
 ```js
 {
-  messageId, // The message id passed in
+  messageid, // The message id passed in
   args, // Any args passed in, or null
   errors: [new Error("Message object not found")],
 }

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - Nothing
 
+## [4.0.0] - 2020-05-01
+### Changed
+- `messageId` is now `messageid` ***note the lower case 'i'***. Changed to match HTML naming conventions
+
 ## [3.0.0] - 2020-04-26
 ### Added
 - Added `unsafeArgs`

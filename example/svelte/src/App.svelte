@@ -79,29 +79,29 @@
   <br />
   Basic key-value:
   <br />
-  <fluent-text messageId="hello-no-name" bundles={currentBundles} />
+  <fluent-text messageid="hello-no-name" bundles={currentBundles} />
   <br />
   <br />
   Styled key-value:
   <br />
-  <fluent-text messageId="sign-in-or-cancel" bundles={currentBundles} />
+  <fluent-text messageid="sign-in-or-cancel" bundles={currentBundles} />
   <br />
   <br />
   Today’s Date:
   <br />
-  <fluent-text messageId="today-date" args={{ date: today }} bundles={currentBundles} />
+  <fluent-text messageid="today-date" args={{ date: today }} bundles={currentBundles} />
   <br />
   <br />
   Message with argument:
   <br />
   <input type="text" bind:value={personName} />
   <br />
-  <fluent-text messageId="hello" args={{ userName: personName }} bundles={currentBundles} />
+  <fluent-text messageid="hello" args={{ userName: personName }} bundles={currentBundles} />
   <br />
   <br />
   Input localized:
   <br />
-  <fluent-element messageId="type-name" bundles={currentBundles} attributeWhitelist={["placeholder"]}>
+  <fluent-element messageid="type-name" bundles={currentBundles} attributeWhitelist={["placeholder"]}>
     <input type="text" />
   </fluent-element>
   <br />
@@ -109,13 +109,13 @@
   Select with localized options:
   <br />
   <label>
-    <fluent-text messageId="favorite-fruit" bundles={currentBundles} />
+    <fluent-text messageid="favorite-fruit" bundles={currentBundles} />
     <select
       value={favoriteFruit}
       on:change={event => (favoriteFruit = event.target.value)}>
       {#each fruits as fruit}
         <option value={fruit}>
-          <fluent-text messageId={`fruit-${fruit}`} bundles={currentBundles} />
+          <fluent-text messageid={`fruit-${fruit}`} bundles={currentBundles} />
         </option>
       {/each}
     </select>
@@ -125,8 +125,8 @@
   Provider-based messages:
   <br />
   <fluent-provider bundles={currentBundles}>
-    <fluent-text messageId="hello-no-name"></fluent-text>
+    <fluent-text messageid="hello-no-name"></fluent-text>
     <br />
-    <fluent-text messageId="sign-in-or-cancel"></fluent-text>
+    <fluent-text messageid="sign-in-or-cancel"></fluent-text>
   </fluent-provider>
 </main>

@@ -74,7 +74,7 @@ fruits.map((fruit) => {
   const optionText = document.createElement("fluent-text");
   const option = document.createElement("option");
 
-  optionText.setAttribute("messageId", `fruit-${fruit}`);
+  optionText.setAttribute("messageid", `fruit-${fruit}`);
   elFruitList.push(optionText);
   option.value = fruit;
   option.appendChild(optionText);
