@@ -1,7 +1,8 @@
 import { mapBundleSync } from "@fluent/sequence";
 import { CachedSyncIterable } from "cached-iterable";
 
-const MESSAGE_ID_ATTRIBUTE = "messageId";
+const MESSAGE_ID_ATTRIBUTE = "messageid";
+const DEPRECATED_MESSAGE_ID_ATTRIBUTE = "messageId";
 
 class FluentElement extends HTMLElement {
   getMessage({ messageId, args, unsafeArgs, whitelist = [] }) {
@@ -112,11 +113,11 @@ class FluentElement extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return [MESSAGE_ID_ATTRIBUTE];
+    return [MESSAGE_ID_ATTRIBUTE, DEPRECATED_MESSAGE_ID_ATTRIBUTE];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === MESSAGE_ID_ATTRIBUTE && oldValue !== newValue) {
+    if (name.toLowerCase() === MESSAGE_ID_ATTRIBUTE && oldValue !== newValue) {
       this.render();
     }
   }
@@ -202,7 +203,7 @@ customElements.define(
   class extends FluentElement {
     render() {
       const message = this.getMessage({
-        messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
+        messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE) || this.getAttribute(DEPRECATED_MESSAGE_ID_ATTRIBUTE),
         args: this.messageArgs,
         unsafeArgs: this.messageUnsafeArgs,
       });
@@ -220,7 +221,7 @@ customElements.define(
     render() {
       if (this.firstElementChild) {
         const message = this.getMessage({
-          messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE),
+          messageId: this.getAttribute(MESSAGE_ID_ATTRIBUTE) || this.getAttribute(DEPRECATED_MESSAGE_ID_ATTRIBUTE),
           args: this.messageArgs,
           unsafeArgs: this.messageUnsafeArgs,
           whitelist: this.whitelist

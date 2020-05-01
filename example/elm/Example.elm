@@ -287,7 +287,7 @@ view model =
         , Html.br [] []
         , Html.node "fluent-text"
             [ bundless
-            , Html.Attributes.attribute "messageId" "hello-no-name"
+            , Html.Attributes.attribute "messageid" "hello-no-name"
             ]
             []
         , Html.br [] []
@@ -296,7 +296,7 @@ view model =
         , Html.br [] []
         , Html.node "fluent-text"
             [ bundless
-            , Html.Attributes.attribute "messageId" "sign-in-or-cancel"
+            , Html.Attributes.attribute "messageid" "sign-in-or-cancel"
             ]
             []
         , Html.br [] []
@@ -305,7 +305,7 @@ view model =
         , Html.br [] []
         , Html.node "fluent-text"
             [ bundless
-            , Html.Attributes.attribute "messageId" "today-date"
+            , Html.Attributes.attribute "messageid" "today-date"
             , Html.Attributes.property "args" <|
                 Json.Encode.object
                     [ ( "date", Json.Encode.int (Time.posixToMillis model.time) ) ]
@@ -323,7 +323,7 @@ view model =
         , Html.br [] []
         , Html.node "fluent-text"
             [ bundless
-            , Html.Attributes.attribute "messageId" "hello"
+            , Html.Attributes.attribute "messageid" "hello"
             , Html.Attributes.property "args" <|
                 Json.Encode.object
                     [ ( "userName", Json.Encode.string model.personName ) ]
@@ -335,7 +335,7 @@ view model =
         , Html.br [] []
         , Html.node "fluent-element"
             [ bundless
-            , Html.Attributes.attribute "messageId" "type-name"
+            , Html.Attributes.attribute "messageid" "type-name"
             , Html.Attributes.property "attributeWhitelist" <|
                 Json.Encode.list Json.Encode.string ["placeholder"]
             ]
@@ -353,7 +353,7 @@ view model =
             []
             [ Html.node "fluent-text"
                 [ bundless
-                , Html.Attributes.attribute "messageId" "favorite-fruit"
+                , Html.Attributes.attribute "messageid" "favorite-fruit"
                 ]
                 []
             ]
@@ -368,7 +368,7 @@ view model =
                         ]
                         [ Html.node "fluent-text"
                             [ bundless
-                            , Html.Attributes.attribute "messageId" ("fruit-" ++ fruitToString fruit)
+                            , Html.Attributes.attribute "messageid" ("fruit-" ++ fruitToString fruit)
                             ]
                             []
                         ]
@@ -382,12 +382,12 @@ view model =
         , Html.node "fluent-provider"
             [ bundless ]
             [ Html.node "fluent-text"
-                [ Html.Attributes.attribute "messageId" "hello-no-name"
+                [ Html.Attributes.attribute "messageid" "hello-no-name"
                 ]
                 []
             , Html.br [] []
             , Html.node "fluent-text"
-                [ Html.Attributes.attribute "messageId" "sign-in-or-cancel"
+                [ Html.Attributes.attribute "messageid" "sign-in-or-cancel"
                 ]
                 []
             ]

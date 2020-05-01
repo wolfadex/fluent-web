@@ -31,7 +31,7 @@ textEl.bundles = [bundle];
 HTML:
 
 ```html
-<fluent-text id="my-text-element" messageId="hello"></fluent-text>
+<fluent-text id="my-text-element" messageid="hello"></fluent-text>
 ```
 
 Result:
