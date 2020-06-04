@@ -83,7 +83,7 @@ clicked-cancel = ไม่เป็นไร
 favorite-fruit = ผลไม้ที่ชอบ
 fruit-apple = แอปเปิ้ล
 fruit-orange = ส้ม
-fruit-lemon = มะนาว
+fruit-lemon = เลมอน
 `);
 
 const eo = new FluentResource(`
